@@ -1,0 +1,35 @@
+@import '../../scss//variables.scss';
+@import '../../scss/btn.scss';
+
+.bord {
+	width: 70vw;
+	height: 100%;
+	background: #EBEBEB;
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+	overflow-y: hidden;
+	&__title {
+		background: $title-background-color;
+		width: 100%;
+		height: 60px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-transform: uppercase;
+		font-size: 22px;
+		font-weight: 600;
+		color: $title-color;
+	}
+	&__wrapper {
+		display: flex;
+		padding: 30px;
+		overflow-x: hidden;
+	}
+	&__list {
+		display: flex;
+		justify-content: flex-start;
+	}
+	&__btn {
+		@include btnAddedItem(68px, 88px, 250px, 200px, 12px);
+	}
+}

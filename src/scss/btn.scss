@@ -1,0 +1,21 @@
+@mixin btnAddedItem($fs, $fsh, $w, $h, $br) {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: transparent;
+	border: 5px dashed $bord-btn;
+	border-radius: $br;
+	margin: 20px;
+	width: $w;
+	height: $h;
+	font-size: $fs;
+	font-weight: 600;
+	color: $bord-btn;
+	transition: 0.2s all;
+	&:hover {
+		background: $bord-background-btn;
+		transition: 0.2s all;
+		font-size: $fsh;
+		cursor: pointer;
+	}
+}

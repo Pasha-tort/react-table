@@ -1,0 +1,40 @@
+@import '../../scss//variables.scss';
+
+.card {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	min-height: 150px;
+	list-style-type: none;
+	margin-top: 20px;
+	overflow: hidden;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	transition: 0.2s all;
+	&:first-child {
+		margin-top: 0px;
+	}
+	&:hover {
+		box-shadow: 0 0 8px rgba(0,0,0,0.5);
+		transition: 0.2s all;
+		cursor: move;
+	}
+	&__title {
+		background: $title-background-color-card;
+		color: #fff;
+		height: 35px;
+		width: 100%;
+		font-size: 18px;
+		font-weight: 600;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	&__desc {
+		background: $desc-background-card;
+		flex-grow: 1;
+		padding: 10px;
+		font-size: 16px;
+		font-weight: 400;
+	}
+}

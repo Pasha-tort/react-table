@@ -1,0 +1,46 @@
+@import '../../scss/variables.scss';
+@import '../../scss/btn.scss';
+
+.cell {
+	background: #fff;
+	min-height: 200px;
+	width: 300px;
+	list-style-type: none;
+	margin-left: 30px;
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+	overflow: hidden;
+	&:first-child {
+		margin-left: 0px;
+	}
+	&_hover {
+		box-shadow: 0 0 12px rgba(0,0,0,0.5);
+		transition: 0.2s all;
+		cursor: move;
+	}
+	&__title {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 45px;
+		font-size: 18px;
+		font-weight: 600;
+		color: $title-color;
+		background: $title-background-color;
+		text-transform: uppercase;
+	}
+	&__wrapper {
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+	&__list {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+	&__btn {
+		@include btnAddedItem(48px, 54px, auto, 60px, 6px);
+	}
+}

@@ -3,12 +3,22 @@ import React, { FC, useRef } from 'react';
 //components
 import { CellList } from './CellList';
 
+//libs
+import { useDrag, useDrop } from 'react-dnd';
+
 //styles
 import style from './cell.module.scss';
 
-export const Cell: FC = () => {
+//types
+import { TypeCell } from '../../data/dataCell';
+import { idText } from 'typescript';
+type PropsDataCell = {
+	dataCell: TypeCell,
+}
 
-	const refCell = useRef<HTMLLIElement>(null!)
+export const Cell: FC<PropsDataCell> = ({ dataCell }) => {
+
+	const refCell = useRef<HTMLLIElement>(null!);
 
 	const handlerMouseEnter = (e: React.MouseEvent<HTMLLIElement>) => {
 		refCell.current.classList.add(style.cell_hover);
@@ -23,8 +33,8 @@ export const Cell: FC = () => {
 				className={style.cell__title}
 				onMouseEnter={handlerMouseEnter}
 				onMouseOut={handlerMouseOut}
-			>cell title</span>
-			<CellList cards={[1, 2, 3]} />
+			>{dataCell.title}</span>
+			<CellList cards={dataCell.list} id={dataCell.id} />
 		</li >
 	)
 }

@@ -2,32 +2,38 @@ import React, { FC } from 'react';
 
 //libs
 import { v4 as uuid } from 'uuid';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 //Components
 import { Cell } from '../cell';
 
 //styles
 import style from './bord.module.scss';
+import { TypeBordList } from '../../data/dataCell';
 
 //types
 type PropsCellList = {
-	cells: any[],
+	data: TypeBordList,
 }
 
-export const BordList: FC<PropsCellList> = ({ cells }) => {
+export const BordList: FC<PropsCellList> = ({ data }) => {
 
 	return (
-		<div className={style.bord__wrapper}>
-			<ul className={style.bord__list}>
-				{
-					cells.map(cell => {
-						return <Cell key={uuid()} />
-					})
-				}
-			</ul>
-			<button className={style.bord__btn}>
-				+
-			</button>
-		</div>
+		<DndProvider backend={HTML5Backend}>
+			<div className={style.bord__wrapper}>
+				<ul className={style.bord__list}>
+					{
+						data.map(cell => {
+							return <Cell dataCell={cell} key={uuid()} />
+						})
+					}
+				</ul>
+				<button className={style.bord__btn}>
+					+
+				</button>
+			</div>
+		</DndProvider>
+
 	)
 }

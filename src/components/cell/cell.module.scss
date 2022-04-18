@@ -4,12 +4,15 @@
 .cell {
 	background: #fff;
 	min-height: 200px;
+	height: 100%;
 	width: 300px;
 	list-style-type: none;
 	margin-left: 30px;
 	border-top-left-radius: 12px;
 	border-top-right-radius: 12px;
+	box-shadow: 0px;
 	overflow: hidden;
+	transition: 0.2s all;
 	&:first-child {
 		margin-left: 0px;
 	}
@@ -39,6 +42,9 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
+		&_hovered {
+			background: red;
+		}
 	}
 	&__btn {
 		@include btnAddedItem(48px, 54px, auto, 60px, 6px);

@@ -29,9 +29,9 @@ export const CellList: FC<PropsCellList> = ({ cards, id }) => {
 				...item as {},
 			};
 		},
-		hover: (item, monitor) => {
-			monitor.didDrop()
-		},
+		// hover: (item, monitor) => {
+		// 	console.log(monitor.getItem())
+		// },
 		collect: (monitor) => ({
 			isOver: monitor.isOver()
 		})

@@ -8,7 +8,6 @@ const initialState = {
 export const reducerBord = (state: TypeBordState = initialState, action: TypeActionBord) => {
 	switch(action.type) {
 		case TypeReducerBorb.setData:
-			console.log(action.payload)
 			return {
 				data: action.payload
 			};

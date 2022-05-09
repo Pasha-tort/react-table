@@ -40,10 +40,16 @@
 		font-weight: 400;
 	}
 	&__dragging {
-		opacity: 0;
+		opacity: 0.5;
+		display: flex;
 	}
 	&__preview {
-		background: red;
-		opacity: 1;
+		display: none;
+		&_active {
+			opacity: 1;
+			transform: rotate(15deg);
+			display: flex;
+			position: absolute;
+		}
 	}
 }

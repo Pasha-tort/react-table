@@ -18,7 +18,6 @@ export const Bord = () => {
 	// useEffect(() => {
 	// 	console.log(data)
 	// }, [data]);
-	console.log(data)
 
 	return (
 		<div className={style.bord}>

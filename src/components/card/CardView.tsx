@@ -7,18 +7,14 @@ import style from './card.module.scss';
 
 //types
 type PropsCardPreview = {
-	// refAnchor: ConnectDragSource | ConnectDragPreview;
 	styles: string;
+	styleInline?: { top: number | undefined; left: number | undefined; width: number | undefined }
 	dataCard: TypeCard;
+	refAnchor: ConnectDragPreview | ConnectDragSource;
+	ref?: React.MutableRefObject<HTMLLIElement>;
 }
 
-export const CardView: FC<PropsCardPreview> = ({ styles, dataCard }) => {
-
-	const collectedProps = useDragLayer(
-		monitor => {
-			monitor.getItem()
-		}
-	)
+export const CardView: FC<PropsCardPreview> = ({ styles, dataCard, styleInline, refAnchor }) => {
 
 	useEffect(() => {
 
@@ -27,6 +23,8 @@ export const CardView: FC<PropsCardPreview> = ({ styles, dataCard }) => {
 	return (
 		<li
 			className={styles}
+			style={styleInline}
+			ref={refAnchor}
 		>
 			<span className={style.card__title}>{dataCard.title}</span>
 			<span className={style.card__desc}>{dataCard.desc}</span>

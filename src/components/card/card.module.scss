@@ -46,8 +46,9 @@
 	&__preview {
 		display: none;
 		&_active {
+			margin-top: 0;
 			opacity: 1;
-			transform: rotate(15deg);
+			// transform: rotate(15deg);
 			display: flex;
 			position: absolute;
 		}

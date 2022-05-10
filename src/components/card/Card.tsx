@@ -5,6 +5,9 @@ import { changeData, TypeCard } from '../../data/dataCell';
 import { CardView } from './CardView';
 import { DragPreviewComponent } from '../dragPreview';
 
+//img
+import tort from './img/tort.jpg';
+
 //styles
 import style from './card.module.scss';
 
@@ -12,7 +15,7 @@ import style from './card.module.scss';
 import { setDataBord } from '../../redux/actions/actionsBord';
 
 //libs
-import { useDrag, useDragLayer, DragSourceMonitor } from 'react-dnd';
+import { useDrag, useDragLayer, DragSourceMonitor, DragPreviewImage } from 'react-dnd';
 import { useDispatch } from 'react-redux';
 
 //types
@@ -68,11 +71,11 @@ export const Card: FC<PropsCard> = ({ dataCard, idCell }) => {
 	return (
 		<>
 			<CardView
-				// ref={wrapperRef}
 				refAnchor={drag}
 				styles={`${style.card} ${collected.isDragging ? style.card__dragging : ''}`}
 				dataCard={dataCard}
 			/>
+			<DragPreviewImage src={'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC'} connect={preview} />
 			<CardView
 				refAnchor={preview}
 				styles={`${style.card} ${collected.isDragging ? style.card__preview_active : style.card__preview}`}

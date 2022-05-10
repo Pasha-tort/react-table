@@ -12,14 +12,7 @@
 	transition: 0.2s all;
 	box-shadow: 0px;
 	opacity: 1;
-	&:first-child {
-		margin-top: 0px;
-	}
-	&:hover {
-		box-shadow: 0 0 8px rgba(0,0,0,0.5);
-		transition: 0.2s all;
-		cursor: move;
-	}
+	margin-top: 20px;
 	&__title {
 		background: $title-background-color-card;
 		color: #fff;
@@ -38,22 +31,31 @@
 		font-size: 16px;
 		font-weight: 400;
 	}
+	&__nodrag {
+		&:hover {
+			box-shadow: 0 0 8px rgba(0,0,0,0.5);
+			transition: 0.2s all;
+			cursor: move;
+		}
+	}
 	&__dragging {
 		opacity: 0.5;
 		display: flex;
 	}
 	&__preview {
-		display: none;
+		transform: rotate(0deg);
+		transition: 0.2s all;
 		&_active {
 			margin-top: 0;
 			opacity: 1;
-			// transform: rotate(15deg);
+			transform: rotate(8deg);
+			transition: 0.2s all;
 			display: flex;
+			box-shadow: 0 0 8px rgba(0,0,0,0.5);
 			position: absolute;
 		}
 	}
 	&__wrapper {
 		list-style-type: none;
-		margin-top: 20px;
 	}
 }

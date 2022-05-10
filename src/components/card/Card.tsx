@@ -3,6 +3,7 @@ import { changeData, TypeCard } from '../../data/dataCell';
 
 //components
 import { CardView } from './CardView';
+import {CardPreview} from './CardPreview';
 import { DragPreviewComponent } from '../dragPreview';
 
 //img
@@ -17,6 +18,7 @@ import { setDataBord } from '../../redux/actions/actionsBord';
 //libs
 import { useDrag, useDragLayer, DragSourceMonitor, DragPreviewImage } from 'react-dnd';
 import { useDispatch } from 'react-redux';
+import { isDataView } from 'util/types';
 
 //types
 type PropsCard = {
@@ -55,38 +57,40 @@ export const Card: FC<PropsCard> = ({ dataCard, idCell }) => {
 		})
 	}), []);
 
-	const { sourceClientOffset } = useDragLayer(monitor => {
+	const { sourceClientOffset, itemSource, clientOffset } = useDragLayer(monitor => {
 		return {
 			clientOffset: monitor.getClientOffset(),
 			initialOffsetDomEl: monitor.getInitialSourceClientOffset(),
 			differenceOffset: monitor.getDifferenceFromInitialOffset(),
 			sourceClientOffset: monitor.getSourceClientOffset(),
+			itemSource: monitor.getItem(),
 		};
 	});
 
 	useEffect(() => {
-	}, [sourceClientOffset]);
-	
+	}, []);
+	console.log('render', dataCard.id)
 	return (
 		<>
 			<CardView
-				refWrapper={wrapperRef}
-				refAnchor={drag}
-				styles={`${style.card} ${collected.isDragging ? style.card__dragging : ''}`}
+				wrapperRef={wrapperRef}
+				anchorRef={drag}
+				styles={`${style.card} ${collected.isDragging ? style.card__dragging : style.card__nodrag}`}
 				dataCard={dataCard}
 			/>
 			<DragPreviewImage src={'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC'} connect={preview} />
-
-			<DragPreviewComponent>
+			{
+				!collected.isDragging ? null
+				:
 				<>
-					<CardView
-						refAnchor={preview}
+					<CardPreview
+						anchorRef={preview}
 						styles={`${style.card} ${collected.isDragging ? style.card__preview_active : style.card__preview}`}
 						dataCard={dataCard}
-						styleInline={{ top: sourceClientOffset?.y, left: sourceClientOffset?.x, width: wrapperRef.current ? wrapperRef.current.getBoundingClientRect().width : undefined }}
+						styleInline={{ top: clientOffset!.y + 20, left: sourceClientOffset?.x, width: wrapperRef.current ? wrapperRef.current.getBoundingClientRect().width : undefined}}
 					/>
 				</>
-			</DragPreviewComponent>
+			}
 		</>
 	)
 }

@@ -18,14 +18,13 @@ type PropsCellList = {
 }
 
 export const BordList: FC<PropsCellList> = ({ data }) => {
-
 	return (
 		<DndProvider backend={HTML5Backend}>
 			<div className={style.bord__wrapper}>
 				<ul className={style.bord__list}>
 					{
 						data.map(cell => {
-							return <Cell dataCell={cell} key={uuid()} />
+							return <Cell dataCell={cell} key={cell.id} />
 						})
 					}
 				</ul>

@@ -9,17 +9,18 @@ import style from './card.module.scss';
 //types
 type PropsCardPreview = {
 	styles: string;
+	styleInline?: { top: number | undefined; left: number | undefined; width: number | undefined}
 	dataCard: TypeCard;
 	anchorRef: ConnectDragPreview | ConnectDragSource;
 	wrapperRef?: React.MutableRefObject<HTMLDivElement>;
 }
 
-export const CardView: FC<PropsCardPreview> = ({ styles, dataCard, anchorRef, wrapperRef }) => {
+export const CardPreview: FC<PropsCardPreview> = ({ styles, dataCard, styleInline, anchorRef, wrapperRef }) => {
 
 	useEffect(() => {
 
-	}, [styles]);
-
+	}, []);
+    // console.log('render')
 	return (
 		<li
 			className={style.card__wrapper}
@@ -27,6 +28,7 @@ export const CardView: FC<PropsCardPreview> = ({ styles, dataCard, anchorRef, wr
 		>
 			<div 
 				className={styles}
+				style={styleInline}
 				ref={wrapperRef}
 			>
 				<span className={style.card__title}>{dataCard.title}</span>

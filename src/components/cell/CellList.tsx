@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 
 //libs
 import { v4 as uuid } from 'uuid'
@@ -19,7 +19,7 @@ type PropsCellList = {
 	id: number,
 }
 
-export const CellList: FC<PropsCellList> = ({ cards, id }) => {
+export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 
 	const [{ isOver }, drop] = useDrop(() => ({
 		accept: 'card',
@@ -35,14 +35,18 @@ export const CellList: FC<PropsCellList> = ({ cards, id }) => {
 		collect: (monitor) => ({
 			isOver: monitor.isOver()
 		})
-	}));
+	}), [cards.length]);
+
+	useEffect(() => {
+
+	}, [cards.length]);
 
 	return (
 		<div ref={drop} className={style.cell__wrapper}>
 			<ul className={style.cell__list}>
 				{
 					cards.map(card => {
-						return <Card dataCard={card} idCell={id} key={uuid()} />
+						return <Card dataCard={card} idCell={id} key={id+card.id} />
 					})
 				}
 			</ul>
@@ -53,3 +57,5 @@ export const CellList: FC<PropsCellList> = ({ cards, id }) => {
 
 	)
 }
+
+export const CellList = React.memo(CellListMemo);

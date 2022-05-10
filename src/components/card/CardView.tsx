@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from 'react';
-import { ConnectDragPreview, ConnectDragSource, DragPreviewImage, useDragLayer } from 'react-dnd';
+import { ConnectDragPreview, ConnectDragSource} from 'react-dnd';
 import { TypeCard } from '../../data/dataCell';
 
 //styles
@@ -11,10 +11,10 @@ type PropsCardPreview = {
 	styleInline?: { top: number | undefined; left: number | undefined; width: number | undefined }
 	dataCard: TypeCard;
 	refAnchor: ConnectDragPreview | ConnectDragSource;
-	ref?: React.MutableRefObject<HTMLLIElement>;
+	refWrapper?: React.MutableRefObject<HTMLDivElement>;
 }
 
-export const CardView: FC<PropsCardPreview> = ({ styles, dataCard, styleInline, refAnchor }) => {
+export const CardView: FC<PropsCardPreview> = ({ styles, dataCard, styleInline, refAnchor, refWrapper }) => {
 
 	useEffect(() => {
 
@@ -22,12 +22,17 @@ export const CardView: FC<PropsCardPreview> = ({ styles, dataCard, styleInline, 
 
 	return (
 		<li
-			className={styles}
-			style={styleInline}
+			className={style.card__wrapper}
 			ref={refAnchor}
 		>
-			<span className={style.card__title}>{dataCard.title}</span>
-			<span className={style.card__desc}>{dataCard.desc}</span>
-		</li>
+			<div 
+				className={styles}
+				style={styleInline}
+				ref={refWrapper}
+			>
+				<span className={style.card__title}>{dataCard.title}</span>
+				<span className={style.card__desc}>{dataCard.desc}</span>
+			</div>
+		</li> 
 	)
 }

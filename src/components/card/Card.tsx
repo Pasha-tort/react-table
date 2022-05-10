@@ -32,7 +32,7 @@ type TypeDataEndDragging = {
 
 export const Card: FC<PropsCard> = ({ dataCard, idCell }) => {
 	const dispatch = useDispatch();
-	const wrapperRef = useRef<HTMLLIElement>(null!);
+	const wrapperRef = useRef<HTMLDivElement>(null!);
 
 	const [collected, drag, preview] = useDrag(() => ({
 		type: 'card',
@@ -65,23 +65,28 @@ export const Card: FC<PropsCard> = ({ dataCard, idCell }) => {
 	});
 
 	useEffect(() => {
-
 	}, [sourceClientOffset]);
-
+	
 	return (
 		<>
 			<CardView
+				refWrapper={wrapperRef}
 				refAnchor={drag}
 				styles={`${style.card} ${collected.isDragging ? style.card__dragging : ''}`}
 				dataCard={dataCard}
 			/>
 			<DragPreviewImage src={'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC'} connect={preview} />
-			<CardView
-				refAnchor={preview}
-				styles={`${style.card} ${collected.isDragging ? style.card__preview_active : style.card__preview}`}
-				dataCard={dataCard}
-				styleInline={{ top: sourceClientOffset?.y, left: sourceClientOffset?.x, width: wrapperRef.current ? wrapperRef.current.getBoundingClientRect().width : undefined }}
-			/>
+
+			<DragPreviewComponent>
+				<>
+					<CardView
+						refAnchor={preview}
+						styles={`${style.card} ${collected.isDragging ? style.card__preview_active : style.card__preview}`}
+						dataCard={dataCard}
+						styleInline={{ top: sourceClientOffset?.y, left: sourceClientOffset?.x, width: wrapperRef.current ? wrapperRef.current.getBoundingClientRect().width : undefined }}
+					/>
+				</>
+			</DragPreviewComponent>
 		</>
 	)
 }

@@ -1,16 +1,19 @@
 import React, { FC } from 'react';
+import { useDragLayer } from 'react-dnd';
 import ReactDOM from 'react-dom';
-
-//styles
-import style from '../card/card.module.scss';
 
 //types
 type PropsDragPreview = {
 	children: React.ReactElement,
-	isDragging: boolean,
 }
 
-export const DragPreviewComponent: FC<PropsDragPreview> = ({ children, isDragging }) => {
+export const DragPreviewComponent: FC<PropsDragPreview> = ({ children }) => {
+
+	const {isDragging} = useDragLayer((monitor) => {
+		return {
+			isDragging: !!monitor.isDragging,
+		}
+	})
 
 	if (isDragging) {
 		return ReactDOM.createPortal(

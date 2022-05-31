@@ -1,3 +1,4 @@
 // import { CardList } from './Car';
 import { Card } from './Card';
-export {Card}
+import {CardView} from './CardView';
+export {Card, CardView};

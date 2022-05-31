@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 
 //components
 import { CellList } from './CellList';
@@ -11,13 +11,12 @@ import style from './cell.module.scss';
 
 //types
 import { TypeCell } from '../../data/dataCell';
-import { idText } from 'typescript';
 type PropsDataCell = {
 	dataCell: TypeCell,
 }
 
-export const Cell: FC<PropsDataCell> = ({ dataCell }) => {
-
+export const CellMemo: FC<PropsDataCell> = ({ dataCell }) => {
+	
 	const refCell = useRef<HTMLLIElement>(null!);
 
 	const handlerMouseEnter = (e: React.MouseEvent<HTMLLIElement>) => {
@@ -27,14 +26,22 @@ export const Cell: FC<PropsDataCell> = ({ dataCell }) => {
 		refCell.current.classList.remove(style.cell_hover);
 	}
 
+	// console.log(dataCell.list)
+	useEffect(() => {	
+	}, [dataCell.list.length])
+	
 	return (
 		<li ref={refCell} className={style.cell}>
 			<span
 				className={style.cell__title}
 				onMouseEnter={handlerMouseEnter}
 				onMouseOut={handlerMouseOut}
-			>{dataCell.title}</span>
+			>
+				{dataCell.title}
+			</span>
 			<CellList cards={dataCell.list} id={dataCell.id} />
 		</li >
 	)
 }
+
+export const Cell = React.memo(CellMemo)

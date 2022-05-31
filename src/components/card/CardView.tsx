@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, forwardRef, useState, useMemo } from 'react';
 import { ConnectDragPreview, ConnectDragSource, DragPreviewImage, useDragLayer } from 'react-dnd';
 import { TypeCard } from '../../data/dataCell';
 
@@ -7,27 +7,55 @@ import style from './card.module.scss';
 
 //types
 type PropsCardPreview = {
+	type: 'card' | 'preview'
+	wrapperRef?: React.MutableRefObject<HTMLDivElement>
 	styles: string;
-	styleInline?: { top: number | undefined; left: number | undefined; width: number | undefined }
 	dataCard: TypeCard;
-	refAnchor: ConnectDragPreview | ConnectDragSource;
-	ref?: React.MutableRefObject<HTMLLIElement>;
+	styleInline?: {
+		width: string | undefined;
+	},
+	coordinate?: {
+		left: string | undefined;
+		top: string | undefined;
+	}
 }
 
-export const CardView: FC<PropsCardPreview> = ({ styles, dataCard, styleInline, refAnchor }) => {
+export const CardView = forwardRef<HTMLLIElement, PropsCardPreview>(({ type, styles, dataCard, styleInline, coordinate, wrapperRef }, ref) => {
+
+	const [lastUpdate, setLastUpdate] = useState(+new Date());
+
+	const update = useMemo(() => {
+		if (+new Date() - lastUpdate > 16) {
+			setLastUpdate(+new Date());
+			return +new Date();
+		}
+	}, [coordinate?.top, coordinate?.left]);
 
 	useEffect(() => {
 
-	}, [styles]);
+	}, [update]);
 
-	return (
-		<li
+	if (type === 'card') {
+		return <li
+			ref={ref}
+			style={{ listStyleType: 'none', marginTop: '20px' }}
+		>
+			<div
+				className={styles}
+				ref={wrapperRef ? wrapperRef : null}
+			>
+				<span className={style.card__title}>{dataCard.title}</span>
+				<span className={style.card__desc}>{dataCard.desc}</span>
+			</div>
+		</li>
+	} else {
+		return <li
+			ref={ref}
+			style={{ listStyleType: 'none', left: coordinate?.left, top: coordinate?.top, ...styleInline }}
 			className={styles}
-			style={styleInline}
-			ref={refAnchor}
 		>
 			<span className={style.card__title}>{dataCard.title}</span>
 			<span className={style.card__desc}>{dataCard.desc}</span>
 		</li>
-	)
-}
+	}
+});

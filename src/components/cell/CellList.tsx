@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 
 //libs
 import { v4 as uuid } from 'uuid'
@@ -10,8 +10,6 @@ import { Card } from '../card';
 //styles
 import style from './cell.module.scss';
 
-//utils
-
 //types
 import { TypeCard } from '../../data/dataCell';
 type PropsCellList = {
@@ -19,7 +17,7 @@ type PropsCellList = {
 	id: number,
 }
 
-export const CellList: FC<PropsCellList> = ({ cards, id }) => {
+export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 
 	const [{ isOver }, drop] = useDrop(() => ({
 		accept: 'card',
@@ -29,20 +27,24 @@ export const CellList: FC<PropsCellList> = ({ cards, id }) => {
 				...item as {},
 			};
 		},
-		// hover: (item, monitor) => {
-		// 	console.log(monitor.getItem())
-		// },
+		hover: (item, monitor) => {
+			// console.log(item)
+		},
 		collect: (monitor) => ({
 			isOver: monitor.isOver()
 		})
-	}));
+	}), [cards, id]);
+
+	useEffect(() => {
+
+	}, [cards, id]);
 
 	return (
-		<div ref={drop} className={style.cell__wrapper}>
-			<ul className={style.cell__list}>
+		<div className={style.cell__wrapper}>
+			<ul ref={drop} className={style.cell__list}>
 				{
-					cards.map(card => {
-						return <Card dataCard={card} idCell={id} key={uuid()} />
+					cards.map((card, i) => {
+						return <Card dataCard={card} idCell={id} key={i} />
 					})
 				}
 			</ul>
@@ -53,3 +55,5 @@ export const CellList: FC<PropsCellList> = ({ cards, id }) => {
 
 	)
 }
+
+export const CellList = React.memo(CellListMemo);

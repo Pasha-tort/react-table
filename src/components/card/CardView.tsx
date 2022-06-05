@@ -25,10 +25,12 @@ export const CardView = forwardRef<HTMLLIElement, PropsCardPreview>(({ type, sty
 	const [lastUpdate, setLastUpdate] = useState(+new Date());
 
 	const update = useMemo(() => {
-		if (+new Date() - lastUpdate > 16) {
-			setLastUpdate(+new Date());
+		const now = +new Date();
+
+		if (now - lastUpdate > 16) {
+			setLastUpdate(now);
 			return +new Date();
-		}
+		} else return now
 	}, [coordinate?.top, coordinate?.left]);
 
 	useEffect(() => {

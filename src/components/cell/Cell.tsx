@@ -15,8 +15,8 @@ type PropsDataCell = {
 	dataCell: TypeCell,
 }
 
-export const CellMemo: FC<PropsDataCell> = ({ dataCell }) => {
-	
+const CellMemo: FC<PropsDataCell> = ({ dataCell }) => {
+
 	const refCell = useRef<HTMLLIElement>(null!);
 
 	const handlerMouseEnter = (e: React.MouseEvent<HTMLLIElement>) => {
@@ -26,10 +26,6 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell }) => {
 		refCell.current.classList.remove(style.cell_hover);
 	}
 
-	// console.log(dataCell.list)
-	useEffect(() => {	
-	}, [dataCell.list.length])
-	
 	return (
 		<li ref={refCell} className={style.cell}>
 			<span
@@ -44,4 +40,17 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell }) => {
 	)
 }
 
-export const Cell = React.memo(CellMemo)
+export const Cell = React.memo(CellMemo, (prev, next) => {
+	if (prev.dataCell.list.length !== next.dataCell.list.length) return false;
+	let result = true;
+	let c = 0;
+	while (c < next.dataCell.list.length) {
+		if (prev.dataCell.list[c].id !== next.dataCell.list[c].id) {
+			result = false;
+			break;
+		}
+		c++;
+	}
+	return result;
+})
+

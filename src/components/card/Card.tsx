@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { changeData, TypeCard } from '../../data/dataCell';
 import { DragPreviewImage } from 'react-dnd';
 
@@ -35,8 +35,9 @@ export const Card: FC<PropsCard> = ({ dataCard, idCell }) => {
 
 	const dispatch = useDispatch();
 	const wrapperRef = useRef<HTMLDivElement>(null!);
+	const [lastUpdate, setLastUpdate] = useState<number>(Date.now());
 
-	const [collected, drag, preview] = useDrag(() => ({
+	const [{ isDragging }, drag, preview] = useDrag(() => ({
 		type: 'card',
 		item: { idSrcCard: dataCard.id, idSrcCell: idCell, },
 		end: (item, monitor) => {
@@ -52,7 +53,7 @@ export const Card: FC<PropsCard> = ({ dataCard, idCell }) => {
 			return monitor.getItem().idSrcCard === dataCard.id
 		},
 		collect: (monitor) => ({
-			isDragging: !!monitor.isDragging(),
+			isDragging: monitor.isDragging(),
 			getDropResult: !!monitor.getDropResult(),
 		})
 	}));
@@ -66,18 +67,27 @@ export const Card: FC<PropsCard> = ({ dataCard, idCell }) => {
 		};
 	});
 
+	const update = useMemo(() => {
+		const now = +new Date();
+
+		if (now - lastUpdate > 16 && isDragging) {
+			setLastUpdate(now);
+			return +new Date();
+		} else return now
+	}, [sourceClientOffset?.x, sourceClientOffset?.y]);
+
 	useEffect(() => {
 
-	}, [dataCard, idCell]);
+	}, [update]);
 
-	console.log(preview)
+	console.log('render' + dataCard.id, isDragging)
 	return (
 		<>
 			<CardView
 				type="card"
 				wrapperRef={wrapperRef}
 				ref={drag}
-				styles={`${style.card} ${collected.isDragging ? style.card__dragging : ''}`}
+				styles={`${style.card} ${isDragging ? style.card__dragging : ''}`}
 				dataCard={dataCard}
 			/>
 			{/* <DragPreviewComponent data={dataCard} styles={style.card + ' ' + style.card__preview} /> */}
@@ -89,7 +99,7 @@ export const Card: FC<PropsCard> = ({ dataCard, idCell }) => {
 			<CardView
 				type="preview"
 				ref={preview}
-				styles={`${style.card} ${collected.isDragging ? style.card__preview_active : style.card__preview}`}
+				styles={`${style.card} ${isDragging ? style.card__preview_active : style.card__preview}`}
 				dataCard={dataCard}
 				styleInline={{
 					width: wrapperRef.current ? wrapperRef.current.getBoundingClientRect().width + 'px' : undefined,

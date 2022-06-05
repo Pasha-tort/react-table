@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 //libs
 import { v4 as uuid } from 'uuid'
@@ -33,11 +33,11 @@ export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 		collect: (monitor) => ({
 			isOver: monitor.isOver()
 		})
-	}), [cards, id]);
+	}));
 
 	useEffect(() => {
 
-	}, [cards, id]);
+	}, [isOver]);
 
 	return (
 		<div className={style.cell__wrapper}>
@@ -52,8 +52,19 @@ export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 				+
 			</button>
 		</div>
-
 	)
 }
 
-export const CellList = React.memo(CellListMemo);
+export const CellList = React.memo(CellListMemo, (prev, next) => {
+	if (prev.cards.length !== next.cards.length) return false;
+	let result = true;
+	let c = 0;
+	while (c < next.cards.length) {
+		if (prev.cards[c].id !== next.cards[c].id) {
+			result = false;
+			break;
+		}
+		c++;
+	}
+	return result;
+});

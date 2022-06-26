@@ -66,25 +66,23 @@ export let data = [
 ];
 
 export function changeData(srcCellId: number, srcElId: number, finalCellId: number) {
-
 	const indexCell = data.findIndex(item => item.id === srcCellId);
 	const indexCard = data[indexCell].list.findIndex(item => item.id === srcElId);
 	const indexFinallCell = data.findIndex(item => item.id === finalCellId);
 
 	const srcEl = data[indexCell].list[indexCard];
-
 	data[indexCell] = {
 		...data[indexCell],
-		list: [...data[indexCell].list.filter(item => item.id !== srcElId)]
+		list: data[indexCell].list.filter(item => {
+			return item.id !== srcEl.id
+		}),
 	}
 	
 	data[indexFinallCell] = {
 		...data[indexFinallCell],
 		list: [...data[indexFinallCell].list, srcEl]
 	}
-
 	return data;
-
 };
 
 export type TypeCard = {

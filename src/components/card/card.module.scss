@@ -11,13 +11,14 @@
 	transition: 0.2s all;
 	box-shadow: 0px;
 	opacity: 1;
+	margin-top: 20px;
 	&:first-child {
 		margin-top: 0px;
 	}
-	&:hover {
-		box-shadow: 0 0 8px rgba(0,0,0,0.5);
+	&__hover {
 		transition: 0.2s all;
-		cursor: move;
+		box-shadow: 0 0 8px rgba(0,0,0,0.5);
+		cursor: pointer;
 	}
 	&__title {
 		background: $title-background-color-card;
@@ -39,16 +40,5 @@
 	}
 	&__dragging {
 		opacity: 0.5;
-		display: flex;
-	}
-	&__preview {
-		display: none;
-		&_active {
-			margin-top: 0;
-			opacity: 1;
-			// transform: rotate(15deg);
-			display: flex;
-			position: absolute;
-		}
 	}
 }

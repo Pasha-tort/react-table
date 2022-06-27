@@ -16,6 +16,7 @@ type PropsCard = {
 	dataCard: TypeCard,
 	idCell: number,
 	numberList: number;
+	handlerDragOver: (e: React.DragEvent, numberList: number) => void;
 }
 
 type TypeDataEndDragging = {
@@ -24,14 +25,7 @@ type TypeDataEndDragging = {
 	idSrcCell: number,
 }
 
-export type TypeDataItmeConfig = {
-	config: {
-		idSrcCard: number,
-		idSrcCell: number,
-	}
-}
-
-export const CardMemo: FC<PropsCard> = ({ dataCard, numberList, idCell }) => {
+export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, handlerDragOver, numberList }) => {
 	const dispatch = useDispatch();
 	const [{ isDragging }, drag] = useDrag(() => ({
 		type: 'card',
@@ -59,7 +53,10 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, numberList, idCell }) => {
 	return (
 		<li
 			className={`${style.card} ${isDragging ? style.card__dragging : ''}`}
+			id={dataCard.id.toString()}
 			ref={drag}
+			onDragOver={(e) => handlerDragOver(e, numberList)}
+			data-card='true'
 		>
 			<span className={style.card__title}>{dataCard.title}</span>
 			<span className={style.card__desc}>{dataCard.desc}</span>
@@ -69,6 +66,7 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, numberList, idCell }) => {
 }
 
 export const Card = React.memo(CardMemo, (prev, next) => {
-	if (prev.dataCard.id === next.dataCard.id && prev.idCell === next.idCell) return true
+	if (prev.numberList === next.numberList && prev.idCell === next.idCell)
+		return true
 	return false
 })

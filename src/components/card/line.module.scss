@@ -1,0 +1,11 @@
+.line {
+	height: 4px;
+	width: 100%;
+	background: green;
+	opacity: 0;
+	transition: 0.15s all;
+	&_active {
+		opacity: 1;
+		transition: 0.15s all;
+	}
+}

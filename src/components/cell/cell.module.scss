@@ -43,8 +43,10 @@
 		flex-direction: column;
 		justify-content: flex-start;
 		min-height: 100px;
+		transition: 0.2s all;
 		&_hovered {
-			background: red;
+			background: pink;
+			transition: 0.2s all;
 		}
 	}
 	&__btn {

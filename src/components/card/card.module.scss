@@ -1,19 +1,60 @@
 @import '../../scss//variables.scss';
 
 .card {
-	display: flex;
-	flex-direction: column;
+	position: relative;
+	list-style-type: none;
 	width: 100%;
-	min-height: 150px;
-	overflow: hidden;
+	height: 170px;
 	border-top-left-radius: 6px;
 	border-top-right-radius: 6px;
 	transition: 0.2s all;
 	box-shadow: 0px;
-	opacity: 1;
 	margin-top: 20px;
+	&__wrapper {
+		display: flex;
+		flex-direction: column;
+		opacity: 1;
+		height: 100%;
+		transition: 0.15s all;
+		&_dragging {
+			transition: 0.15s all;
+			opacity: 0.5;
+		}
+	}
 	&:first-child {
 		margin-top: 0px;
+	}
+	&::before {
+		content: '';
+		position: absolute;
+		display: none;
+		height: 6px;
+		width: 100%;
+		background: rgba($title-background-color-card, 1);		
+		top: -13px;
+		z-index: 10;
+		border-radius: 2px;
+	}
+	&::after {
+		content: '';
+		position: absolute;
+		display: none;
+		height: 6px;
+		width: 100%;
+		background: rgba($title-background-color-card, 1);		
+		bottom: -13px;
+		z-index: 10;
+		border-radius: 2px;
+	}
+	&__topline {
+		&::before {
+			display: block;
+		}
+	}
+	&__bottomline {
+		&::after {
+			display: block;
+		}
 	}
 	&__hover {
 		transition: 0.2s all;
@@ -37,8 +78,5 @@
 		padding: 10px;
 		font-size: 16px;
 		font-weight: 400;
-	}
-	&__dragging {
-		opacity: 0.5;
 	}
 }

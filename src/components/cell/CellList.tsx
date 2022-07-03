@@ -14,6 +14,8 @@ import styleLine from '../card/Line/line.module.scss';
 //types
 import { TypeCard } from '../../data/dataCell';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { R } from '../../redux/reducers';
 // import { TypeDataItmeConfig } from '../card/Card';
 type PropsCellList = {
 	cards: TypeCard[],
@@ -25,7 +27,6 @@ type DataOfHover = {
 }
 type DataLine = {
 	position: 'top' | 'bottom' | 'never';
-	prevPosition: 'top' | 'bottom' | 'never';
 	el: HTMLElement;
 	numberList: number;
 }
@@ -33,7 +34,7 @@ type DataLine = {
 export const CellList: FC<PropsCellList> = ({ cards, id }) => {
 
 	const [background, setBackground] = useState<string>('');
-	const [lineState, setLine] = useState<DataLine>(null!);
+	const { updateCard } = useSelector((r: R) => r.reducerCard);
 
 	const [{ isOver }, drop] = useDrop(() => ({
 		accept: 'card',
@@ -52,75 +53,55 @@ export const CellList: FC<PropsCellList> = ({ cards, id }) => {
 		if (cards.length) setBackground('')
 	}, [cards]);
 
-	const searchParent = (node: HTMLElement, searchSelector: string, selectorValue: string): HTMLElement | Function => {
-		if (node.dataset && node.dataset[searchSelector] === 'true') return node;
-		else return searchParent(node, searchSelector, selectorValue);
-	}
-
-	const handlerDragOver = (e: React.DragEvent, numberList: number) => {
-		const x = e.clientX;
-		const y = e.clientY;
-		const el = e.target as HTMLElement;
-		const parent = searchParent(el.parentElement!, 'card', 'true') as HTMLElement;
-		const coordEl = parent.getBoundingClientRect();
-
-		if (y > Math.ceil(coordEl.top - (coordEl.height / 2))) {
-
-			setLine({
-				position: 'top',
-				el: parent,
-				numberList,
-			});
-			if (lineState.prevPosition !== lineState)
-				parent.previousElementSibling?.classList.add(styleLine.line_active);
-		} else {
-			parent.nextElementSibling?.classList.add(styleLine.line_active);
-			// setLine({
-			// 	position: 'bottom',
-			// 	el: parent,
-			// 	numberList,
-			// });
-		}
-	}
-
 	const handlerDragEnter = () => {
 		if (!cards.length) setBackground(style.cell__list_hovered);
 	}
 	const handlerDragLeave = () => {
-		setLine(null!);
 		if (!cards.length) setBackground('');
 	}
 
 	return (
 		<div className={style.cell__wrapper}>
 			<ul
-				ref={drop}
 				onDragEnter={handlerDragEnter}
 				onDragLeave={handlerDragLeave}
+				ref={drop}
+				// onDragOver={handlerDragOver}
 				className={`${style.cell__list} ${background}`}
 			>
 				{
 					cards.map((card, i) => {
-						const cardView = <Card
+						return <Card
 							dataCard={card}
 							numberList={i}
 							idCell={id}
 							key={card.id}
-							handlerDragOver={handlerDragOver}
+							updateCard={updateCard!}
 						/>
-						if (i === 0)
-							return <>
-								{Line}
-								{cardView}
-								{Line}
-							</>
-						else {
-							return <>
-								{cardView}
-								{Line}
-							</>
-						}
-					})
+						// if (i === 0) {
+						// 	return <>
+						// 		<Line key={'line' + card.id + "first"} />
+						// 		<Card
+						// 			dataCard={card}
+						// 			numberList={i}
+						// 			idCell={id}
+						// 			key={card.id}
+						// 		/>
+						// 		<Line key={'line' + card.id} />
+						// 	</>
+						// } else {
+						// 	<>
+						// 		<Card
+						// 			dataCard={card}
+						// 			numberList={i}
+						// 			idCell={id}
+						// 			key={card.id}
+						// 		/>
+						// 		<Line key={'line' + card} />
+						// 	</>
+						// }
+					}
+					)
 				}
 			</ul>
 			<button className={style.cell__btn}>

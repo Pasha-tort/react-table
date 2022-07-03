@@ -17,6 +17,8 @@ import { R } from '../../redux/reducers';
 export const BordList: FC = () => {
 
 	const { data } = useSelector((state: R) => state.reducerBord);
+
+
 	return (
 		<DndProvider backend={HTML5Backend}>
 			<div className={style.bord__wrapper}>

@@ -100,13 +100,15 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, updateCard }) => {
 			}
 		}
 	}
-	// const handlerDragLeave = (e: React.DragEvent) => {
-	// 	if (nextCard !== prevCard) {
-	// 		setPositionDrag('noDrag');
-	// 		prevCard?.el.classList.remove(style.card__bottomline);
-	// 		prevCard?.el.classList.remove(style.card__topline);
-	// 	}
-	// }
+	const handlerDragLeave = (e: React.DragEvent) => {
+    const el = e.target as HTMLElement;
+		const parent = searchParent(el, 'card', 'true') as HTMLElement;
+		if (parent !== prevCard?.el) {
+			setPositionDrag('noDrag');
+			// prevCard?.el.classList.remove(style.card__bottomline);
+			// prevCard?.el.classList.remove(style.card__topline);
+		}
+	}
 
 	useEffect(() => {
 		// console.log('render')

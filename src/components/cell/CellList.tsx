@@ -12,7 +12,7 @@ import style from './cell.module.scss';
 import styleLine from '../card/Line/line.module.scss';
 
 //types
-import { TypeCard } from '../../data/dataCell';
+import { data, TypeCard } from '../../data/dataCell';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { R } from '../../redux/reducers';
@@ -34,7 +34,6 @@ type DataLine = {
 export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 
 	const [background, setBackground] = useState<string>('');
-	const { updateCard } = useSelector((r: R) => r.reducerCard);
 
 	const [{ isOver }, drop] = useDrop(() => ({
 		accept: 'card',
@@ -70,7 +69,6 @@ export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 				onDragEnter={handlerDragEnter}
 				onDragLeave={handlerDragLeave}
 				ref={drop}
-				// onDragOver={handlerDragOver}
 				className={`${style.cell__list} ${background}`}
 			>
 				{
@@ -80,7 +78,6 @@ export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 							numberList={i}
 							idCell={id}
 							key={card.id}
-							updateCard={updateCard!}
 						/>
 						// if (i === 0) {
 						// 	return <>

@@ -1,13 +1,15 @@
 export type TypeCard = {
-	prevCard?: {
-		el: HTMLElement;
-		id: number;
-	} | null;
-	nextCard?: {
-		el: HTMLElement;
-		id: number;
-	} | null;
-	updateCard?: number | null;
+	prevCard: PrevCard | null;
+	// nextCard?: {
+	// 	el: HTMLElement;
+	// 	id: number;
+	// } | null;
+	updateCard: number;
+}
+
+export type PrevCard = {
+  el: HTMLElement;
+  id: number;
 }
 
 export enum TypeReducerCard {
@@ -16,7 +18,12 @@ export enum TypeReducerCard {
 	updateCard = 'UPDATE_CARD',
 }
 
-export type TypeActionCard = {
+export type TypeActionPrevCard = {
 	type: TypeReducerCard,
-	payload: TypeCard | null,
+	payload: PrevCard,
 }
+export type TypeActionUpdateCard = {
+  type : TypeReducerCard,
+  payload: number;
+}
+export type TypeActionCard = TypeActionPrevCard | TypeActionUpdateCard;

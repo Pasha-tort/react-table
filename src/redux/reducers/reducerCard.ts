@@ -1,9 +1,15 @@
-import { TypeCard, TypeActionCard, TypeReducerCard } from '../types/typeCard';
+import { 
+  TypeCard, 
+  TypeActionPrevCard, 
+  TypeActionUpdateCard, 
+  TypeReducerCard,
+  TypeActionCard,
+} from '../types/typeCard';
 
 const initialState = {
 	prevCard: null,
-	nextCard: null,
-	updateCard: null,
+	// nextCard: null,
+	updateCard: 0,
 };
 
 export const reducerCard = (state: TypeCard = initialState, action: TypeActionCard) => {
@@ -11,17 +17,17 @@ export const reducerCard = (state: TypeCard = initialState, action: TypeActionCa
 		case TypeReducerCard.setPrevCard:
 			return {
 				...state,
-				prevCard: action.payload?.prevCard,
+				prevCard: (action as TypeActionPrevCard).payload,
 			}
-		case TypeReducerCard.setNextCard:
-			return {
-				...state,
-				nextCard: action.payload?.nextCard,
-			}
+		// case TypeReducerCard.setNextCard:
+		// 	return {
+		// 		...state,
+		// 		nextCard: action.payload?.nextCard,
+		// 	}
 		case TypeReducerCard.updateCard:
 			return {
 				...state,
-				updateCard: action.payload as number,
+				updateCard: (action as TypeActionUpdateCard).payload,
 			}
 		default:
 			return state;

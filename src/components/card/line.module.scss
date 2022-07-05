@@ -1,0 +1,11 @@
+.line {
+	height: 6px;
+	width: 100%;
+	background: rgba(green, 0);
+	transition: 0.15s all;
+	border-radius: 2px;
+	&_active {
+		background: rgba(green, 1);
+		transition: 0.15s all;
+	}
+}

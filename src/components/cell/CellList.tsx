@@ -1,39 +1,51 @@
-import React, { FC, useEffect } from 'react';
+import React, { DOMElement, FC, useEffect } from 'react';
 
 //libs
-import { v4 as uuid } from 'uuid'
-import { useDrop, ConnectDropTarget } from 'react-dnd';
+import { useDrop } from 'react-dnd';
 
-//componetns
+//components
 import { Card } from '../card';
+import { Line } from '../card/Line';
 
 //styles
 import style from './cell.module.scss';
-
-//utils
+import styleLine from '../card/Line/line.module.scss';
 
 //types
 import { TypeCard } from '../../data/dataCell';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { R } from '../../redux/reducers';
+// import { TypeDataItemConfig } from '../card/Card';
 type PropsCellList = {
 	cards: TypeCard[],
 	id: number,
 }
+type DataOfHover = {
+	idSrcCard: number,
+	idSrcCell: number,
+}
+type DataLine = {
+	position: 'top' | 'bottom' | 'never';
+	el: HTMLElement;
+	numberList: number;
+}
 
 export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 
+	const [background, setBackground] = useState<string>('');
+	const { updateCard } = useSelector((r: R) => r.reducerCard);
+
 	const [{ isOver }, drop] = useDrop(() => ({
 		accept: 'card',
-		drop: (item, monitor) => {
+		drop: (item: DataOfHover, monitor) => {
 			return {
+				...item,
 				idFinalCell: id,
-				...item as {},
-			};
+			}
 		},
-		// hover: (item, monitor) => {
-		// 	console.log(monitor.getItem())
-		// },
 		collect: (monitor) => ({
-			isOver: monitor.isOver()
+			isOver: monitor.isOver(),
 		})
 	}), [cards.length]);
 
@@ -41,20 +53,65 @@ export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 
 	}, [cards.length]);
 
+	useEffect(() => {
+		if (cards.length) setBackground('')
+	}, [cards]);
+
+	const handlerDragEnter = () => {
+		if (!cards.length) setBackground(style.cell__list_hovered);
+	}
+	const handlerDragLeave = () => {
+		if (!cards.length) setBackground('');
+	}
+
 	return (
-		<div ref={drop} className={style.cell__wrapper}>
-			<ul className={style.cell__list}>
+		<div className={style.cell__wrapper}>
+			<ul
+				onDragEnter={handlerDragEnter}
+				onDragLeave={handlerDragLeave}
+				ref={drop}
+				// onDragOver={handlerDragOver}
+				className={`${style.cell__list} ${background}`}
+			>
 				{
-					cards.map(card => {
-						return <Card dataCard={card} idCell={id} key={id+card.id} />
-					})
+					cards.map((card, i) => {
+						return <Card
+							dataCard={card}
+							numberList={i}
+							idCell={id}
+							key={card.id}
+							updateCard={updateCard!}
+						/>
+						// if (i === 0) {
+						// 	return <>
+						// 		<Line key={'line' + card.id + "first"} />
+						// 		<Card
+						// 			dataCard={card}
+						// 			numberList={i}
+						// 			idCell={id}
+						// 			key={card.id}
+						// 		/>
+						// 		<Line key={'line' + card.id} />
+						// 	</>
+						// } else {
+						// 	<>
+						// 		<Card
+						// 			dataCard={card}
+						// 			numberList={i}
+						// 			idCell={id}
+						// 			key={card.id}
+						// 		/>
+						// 		<Line key={'line' + card} />
+						// 	</>
+						// }
+					}
+					)
 				}
 			</ul>
 			<button className={style.cell__btn}>
 				+
 			</button>
 		</div>
-
 	)
 }
 

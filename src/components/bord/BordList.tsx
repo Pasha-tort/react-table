@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
+import { useSelector } from 'react-redux';
 
 //libs
-import { v4 as uuid } from 'uuid';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -10,14 +10,14 @@ import { Cell } from '../cell';
 
 //styles
 import style from './bord.module.scss';
-import { TypeBordList } from '../../data/dataCell';
 
-//types
-type PropsCellList = {
-	data: TypeBordList,
-}
+//actions
+import { R } from '../../redux/reducers';
 
-export const BordList: FC<PropsCellList> = ({ data }) => {
+export const BordList: FC = () => {
+
+	const { data } = useSelector((state: R) => state.reducerBord);
+
 	return (
 		<DndProvider backend={HTML5Backend}>
 			<div className={style.bord__wrapper}>
@@ -33,6 +33,5 @@ export const BordList: FC<PropsCellList> = ({ data }) => {
 				</button>
 			</div>
 		</DndProvider>
-
 	)
 }

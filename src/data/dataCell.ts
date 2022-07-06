@@ -101,10 +101,19 @@ export function changeData(
 			...data[indexFinallCell].list.slice(numberCardDrop+1),
 		];
 	}
-	console.log(list)
 	data[indexFinallCell] = {
 		...data[indexFinallCell],
-		list,
+		list: positionDrop === 'before' ? 
+			[
+				...data[indexFinallCell].list.slice(0, numberCardDrop), 
+				srcEl, 
+				...data[indexFinallCell].list.slice(numberCardDrop),
+			] :
+			[
+				...data[indexFinallCell].list.slice(0, numberCardDrop+1), 
+				srcEl, 
+				...data[indexFinallCell].list.slice(numberCardDrop+1),
+			]
 	}
 	return data;
 };

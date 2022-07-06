@@ -1,9 +1,5 @@
 export type TypeCard = {
 	prevCard: PrevCard | null;
-	// nextCard?: {
-	// 	el: HTMLElement;
-	// 	id: number;
-	// } | null;
 	updateCard: number;
 }
 

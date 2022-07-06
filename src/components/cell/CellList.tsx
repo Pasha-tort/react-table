@@ -1,22 +1,17 @@
-import React, { DOMElement, FC, useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 
 //libs
 import { useDrop } from 'react-dnd';
 
 //components
 import { Card } from '../card';
-import { Line } from '../card/Line';
 
 //styles
 import style from './cell.module.scss';
-import styleLine from '../card/Line/line.module.scss';
 
 //types
-import { data, TypeCard } from '../../data/dataCell';
+import { TypeCard } from '../../data/dataCell';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { R } from '../../redux/reducers';
-// import { TypeDataItemConfig } from '../card/Card';
 type PropsCellList = {
 	cards: TypeCard[],
 	id: number,
@@ -24,11 +19,6 @@ type PropsCellList = {
 type DataOfHover = {
 	idSrcCard: number,
 	idSrcCell: number,
-}
-type DataLine = {
-	position: 'top' | 'bottom' | 'never';
-	el: HTMLElement;
-	numberList: number;
 }
 
 export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
@@ -79,30 +69,7 @@ export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 							idCell={id}
 							key={card.id}
 						/>
-						// if (i === 0) {
-						// 	return <>
-						// 		<Line key={'line' + card.id + "first"} />
-						// 		<Card
-						// 			dataCard={card}
-						// 			numberList={i}
-						// 			idCell={id}
-						// 			key={card.id}
-						// 		/>
-						// 		<Line key={'line' + card.id} />
-						// 	</>
-						// } else {
-						// 	<>
-						// 		<Card
-						// 			dataCard={card}
-						// 			numberList={i}
-						// 			idCell={id}
-						// 			key={card.id}
-						// 		/>
-						// 		<Line key={'line' + card} />
-						// 	</>
-						// }
-					}
-					)
+					})
 				}
 			</ul>
 			<button className={style.cell__btn}>

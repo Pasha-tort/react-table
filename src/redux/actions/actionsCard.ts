@@ -7,13 +7,6 @@ export const setPrevCard = (res: PrevCard) => {
 	}
 }
 
-// export const setNextCard = (res: TypeCard) => {
-// 	return {
-// 		type: TypeReducerCard.setNextCard,
-// 		payload: res,
-// 	}
-// }
-
 export const updateCardF = (res: number) => {
 	return {
 		type: TypeReducerCard.updateCard,

@@ -1,13 +1,6 @@
 import React, { FC, useEffect, useState, useRef } from 'react';
 import { changeData, TypeCard } from '../../data/dataCell';
 
-//components
-import { CardView } from './CardView';
-import {CardPreview} from './CardPreview';
-
-//img
-import tort from './img/tort.jpg';
-
 //styles
 import style from './card.module.scss';
 
@@ -16,12 +9,8 @@ import { setDataBord } from '../../redux/actions/actionsBord';
 import { setPrevCard, updateCardF } from '../../redux/actions/actionsCard';
 
 //libs
-import { useDrag, useDragLayer, DragSourceMonitor, DragPreviewImage } from 'react-dnd';
-import { isDataView } from 'util/types';
+import { useDrag } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-
-//halper
-import { isHTMLElemnt } from '../../lib/type';
 
 //types
 import { R } from '../../redux/reducers';
@@ -35,7 +24,7 @@ type TypeDataEndDragging = {
 	idSrcCard: number,
 	idSrcCell: number,
 }
-type PositionDrag = 'top' | 'bottom' | 'noDrag';
+type PositionDrag = 'before' | 'after' | 'noDrag';
 
 export const CardMemo: FC<PropsCard> = ({ dataCard, idCell }) => {
 	const dispatch = useDispatch();
@@ -48,8 +37,7 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell }) => {
 		type: 'card',
 		end: (_, monitor) => {
 			if (!monitor.getDropResult()) return;
-      if (prevCard) 
-        console.log(prevCard.id, 'end')
+			dispatch(updateCardF(prevCard!.id))
 			const { idSrcCell, idSrcCard, idFinalCell } = monitor.getDropResult() as TypeDataEndDragging;
 			const data = changeData(idSrcCell, idSrcCard, idFinalCell);
 			setPositionDrag('noDrag');
@@ -68,7 +56,7 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell }) => {
 		collect: (monitor) => ({
 			isDragging: monitor.isDragging()
 		})
-	}));
+	}), [prevCard]);
 
 	const searchParent = (node: HTMLElement, searchSelector: string, selectorValue: string): HTMLElement | Function => {
 		if (node === cardRef.current) return node;
@@ -79,41 +67,37 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell }) => {
 		const y = e.clientY;
 		const el = e.target as HTMLElement;
 		const parent = searchParent(el, 'card', 'true') as HTMLElement;
-    if (parent !== prevCard?.el) {
-      if (prevCard)
-			  dispatch(updateCardF(prevCard.id));
-      if (prevCard) console.log(prevCard.id, dataCard.id);
-      dispatch(setPrevCard({el: parent, id: dataCard.id}));
-    }
+		if (parent !== prevCard?.el) {
+			if (prevCard)
+				dispatch(updateCardF(prevCard.id));
+			dispatch(setPrevCard({ el: parent, id: dataCard.id }));
+		}
 		const coordEl = parent.getBoundingClientRect();
 		if (y < Math.ceil(coordEl.top + (coordEl.height / 2))) {
-			if (positionDrag === 'top' && parent === prevCard?.el && prevCard !== null) return;
+			if (positionDrag === 'before' && parent === prevCard?.el && prevCard !== null) return;
 			else {
-				setPositionDrag('top');
+				setPositionDrag('before');
 			}
 		} else {
-			if (positionDrag === 'bottom' && parent === prevCard!.el && prevCard !== null) return;
+			if (positionDrag === 'after' && parent === prevCard!.el && prevCard !== null) return;
 			else {
-				setPositionDrag('bottom');
+				setPositionDrag('after');
 			}
 		}
 	}
 
-  useEffect(() => {
-
-  }, [positionDrag]);
 	useEffect(() => {
 		if (updateCard === dataCard.id && positionDrag !== 'noDrag') {
-      setPositionDrag('noDrag');
-    }
-	}, [updateCard]);
+			setPositionDrag('noDrag');
+		}
+	}, [updateCard, dataCard.id, positionDrag]);
 
 	return (
 		<li
 			className={`
 				${style.card}
-				${positionDrag === 'top' ?
-					style.card__topline : positionDrag === 'bottom' ?
+				${positionDrag === 'before' ?
+					style.card__topline : positionDrag === 'after' ?
 						style.card__bottomline : ''
 				}
 			`}
@@ -140,7 +124,6 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell }) => {
 
 export const Card = React.memo(CardMemo, (prev, next) => {
 	// false - обновляем (нюанс react.memo)
-	// if (next.updateCard === next.dataCard.id) return false;
 	if (prev.numberList === next.numberList && prev.idCell === next.idCell)
 		return true
 	return false

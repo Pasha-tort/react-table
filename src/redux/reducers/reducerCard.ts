@@ -8,7 +8,6 @@ import {
 
 const initialState = {
 	prevCard: null,
-	// nextCard: null,
 	updateCard: 0,
 };
 
@@ -19,11 +18,6 @@ export const reducerCard = (state: TypeCard = initialState, action: TypeActionCa
 				...state,
 				prevCard: (action as TypeActionPrevCard).payload,
 			}
-		// case TypeReducerCard.setNextCard:
-		// 	return {
-		// 		...state,
-		// 		nextCard: action.payload?.nextCard,
-		// 	}
 		case TypeReducerCard.updateCard:
 			return {
 				...state,

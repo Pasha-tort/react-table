@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect } from 'react';
 
 //components
 import { CellList } from './CellList';
@@ -13,20 +13,9 @@ type PropsDataCell = {
 }
 
 export const Cell: FC<PropsDataCell> = ({ dataCell }) => {
-
-	// const refCell = useRef<HTMLLIElement>(null!);
-
-	// const handlerMouseEnter = (e: React.MouseEvent<HTMLLIElement>) => {
-	// 	refCell.current.classList.add(style.cell_hover);
-	// }
-	// const handlerMouseOut = (e: React.MouseEvent<HTMLLIElement>) => {
-	// 	refCell.current.classList.remove(style.cell_hover);
-	// }
-
-	// console.log(dataCell.list)
-	useEffect(() => {	
+	useEffect(() => {
 	}, [dataCell.list.length])
-	
+
 	return (
 		<li className={style.cell}>
 			<span
@@ -38,18 +27,4 @@ export const Cell: FC<PropsDataCell> = ({ dataCell }) => {
 		</li >
 	)
 }
-
-// export const Cell = React.memo(CellMemo, (prev, next) => {
-// 	if (prev.dataCell.list.length !== next.dataCell.list.length) return false;
-// 	let result = true;
-// 	let c = 0;
-// 	while (c < next.dataCell.list.length) {
-// 		if (prev.dataCell.list[c].id !== next.dataCell.list[c].id) {
-// 			result = false;
-// 			break;
-// 		}
-// 		c++;
-// 	}
-// 	return result;
-// })
 

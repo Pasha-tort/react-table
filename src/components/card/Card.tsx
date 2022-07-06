@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 //types
 import { R } from '../../redux/reducers';
+import { PositionDrop } from '../../redux/types/typeCard';
 type PropsCard = {
 	dataCard: TypeCard,
 	idCell: number,
@@ -24,12 +25,11 @@ type TypeDataEndDragging = {
 	idSrcCard: number,
 	idSrcCell: number,
 }
-type PositionDrag = 'before' | 'after' | 'noDrag';
 
-export const CardMemo: FC<PropsCard> = ({ dataCard, idCell }) => {
+export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 	const dispatch = useDispatch();
 	const cardRef = useRef<HTMLElement>(null!);
-	const [positionDrag, setPositionDrag] = useState<PositionDrag>('noDrag');
+	const [positionDrop, setPositionDrop] = useState<PositionDrop>('noDrag');
 
 	const { prevCard, updateCard } = useSelector((r: R) => r.reducerCard);
 
@@ -37,15 +37,16 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell }) => {
 		type: 'card',
 		end: (_, monitor) => {
 			if (!monitor.getDropResult()) return;
-			dispatch(updateCardF(prevCard!.id))
+			dispatch(updateCardF(prevCard!.id));
+			const { numberCardDrop, positionDrop } = prevCard!;
 			const { idSrcCell, idSrcCard, idFinalCell } = monitor.getDropResult() as TypeDataEndDragging;
-			const data = changeData(idSrcCell, idSrcCard, idFinalCell);
-			setPositionDrag('noDrag');
+			const data = changeData(idSrcCell, idSrcCard, idFinalCell, numberCardDrop!, positionDrop);
+			setPositionDrop('noDrag');
 			dispatch(setDataBord(data));
 		},
 		item: {
 			idSrcCard: dataCard.id,
-			idSrcCell: idCell
+			idSrcCell: idCell,
 		},
 		options: {
 			dropEffect: 'move',
@@ -56,7 +57,7 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell }) => {
 		collect: (monitor) => ({
 			isDragging: monitor.isDragging()
 		})
-	}), [prevCard]);
+	}), [prevCard, numberList]);
 
 	const searchParent = (node: HTMLElement, searchSelector: string, selectorValue: string): HTMLElement | Function => {
 		if (node === cardRef.current) return node;
@@ -67,37 +68,47 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell }) => {
 		const y = e.clientY;
 		const el = e.target as HTMLElement;
 		const parent = searchParent(el, 'card', 'true') as HTMLElement;
-		if (parent !== prevCard?.el) {
-			if (prevCard)
-				dispatch(updateCardF(prevCard.id));
-			dispatch(setPrevCard({ el: parent, id: dataCard.id }));
-		}
+		if (prevCard && parent !== prevCard?.el)
+			dispatch(updateCardF(prevCard.id));
+
 		const coordEl = parent.getBoundingClientRect();
 		if (y < Math.ceil(coordEl.top + (coordEl.height / 2))) {
-			if (positionDrag === 'before' && parent === prevCard?.el && prevCard !== null) return;
+			if (positionDrop === 'before' && parent === prevCard?.el && prevCard !== null) return;
 			else {
-				setPositionDrag('before');
+				setPositionDrop('before');
+				dispatch(setPrevCard({
+					el: parent,
+					id: dataCard.id,
+					numberCardDrop: numberList,
+					positionDrop: 'before',
+				}));
 			}
 		} else {
-			if (positionDrag === 'after' && parent === prevCard!.el && prevCard !== null) return;
+			if (positionDrop === 'after' && parent === prevCard!.el && prevCard !== null) return;
 			else {
-				setPositionDrag('after');
+				setPositionDrop('after');
+				dispatch(setPrevCard({
+					el: parent,
+					id: dataCard.id,
+					numberCardDrop: numberList,
+					positionDrop: 'after',
+				}));
 			}
 		}
 	}
 
 	useEffect(() => {
-		if (updateCard === dataCard.id && positionDrag !== 'noDrag') {
-			setPositionDrag('noDrag');
+		if (updateCard === dataCard.id && positionDrop !== 'noDrag') {
+			setPositionDrop('noDrag');
 		}
-	}, [updateCard, dataCard.id, positionDrag]);
+	}, [updateCard, dataCard.id, positionDrop, numberList]);
 
 	return (
 		<li
 			className={`
 				${style.card}
-				${positionDrag === 'before' ?
-					style.card__topline : positionDrag === 'after' ?
+				${positionDrop === 'before' ?
+					style.card__topline : positionDrop === 'after' ?
 						style.card__bottomline : ''
 				}
 			`}

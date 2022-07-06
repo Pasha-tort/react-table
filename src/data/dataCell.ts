@@ -1,3 +1,5 @@
+import { PositionDrop } from '../redux/types/typeCard';
+
 export let data = [
 	{
 		id: 1,
@@ -65,22 +67,44 @@ export let data = [
 	},
 ];
 
-export function changeData(srcCellId: number, srcElId: number, finalCellId: number) {
-	const indexCell = data.findIndex(item => item.id === srcCellId);
-	const indexCard = data[indexCell].list.findIndex(item => item.id === srcElId);
+export function changeData(
+	srcCellId: number, 
+	srcElId: number, 
+	finalCellId: number,
+	numberCardDrop: number,
+	positionDrop: Omit<PositionDrop, 'noDrag'>,
+) {
+	const indexSrcCell = data.findIndex(item => item.id === srcCellId);
+	const indexSrcCard = data[indexSrcCell].list.findIndex(item => item.id === srcElId);
 	const indexFinallCell = data.findIndex(item => item.id === finalCellId);
 
-	const srcEl = data[indexCell].list[indexCard];
-	data[indexCell] = {
-		...data[indexCell],
-		list: data[indexCell].list.filter(item => {
+	const srcEl = data[indexSrcCell].list[indexSrcCard];
+	data[indexSrcCell] = {
+		...data[indexSrcCell],
+		list: data[indexSrcCell].list.filter(item => {
 			return item.id !== srcEl.id
 		}),
 	}
-	
+
+	let list: any[];
+	if (positionDrop === 'before') {
+		list = [
+			...data[indexFinallCell].list.slice(0, numberCardDrop), 
+			srcEl, 
+			...data[indexFinallCell].list.slice(numberCardDrop),
+		];
+		console.log(list)
+	} else {
+		list = [
+			...data[indexFinallCell].list.slice(0, numberCardDrop+1), 
+			srcEl, 
+			...data[indexFinallCell].list.slice(numberCardDrop+1),
+		];
+	}
+	console.log(list)
 	data[indexFinallCell] = {
 		...data[indexFinallCell],
-		list: [...data[indexFinallCell].list, srcEl]
+		list,
 	}
 	return data;
 };

@@ -4,10 +4,12 @@ export type TypeCard = {
 }
 
 export type PrevCard = {
-  el: HTMLElement;
-  id: number;
+  	el: HTMLElement;
+  	id: number;
+  	numberCardDrop: number | null;
+	positionDrop: PositionDrop;
 }
-
+export type PositionDrop = 'before' | 'after' | 'noDrag';
 export enum TypeReducerCard {
 	setPrevCard = 'SET_PREV_CARD',
 	setNextCard = 'SET_NEXT_CARD',

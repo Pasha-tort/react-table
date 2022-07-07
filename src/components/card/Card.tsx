@@ -8,6 +8,9 @@ import style from './card.module.scss';
 import { setDataBord } from '../../redux/actions/actionsBord';
 import { setPrevCard, updateCardF } from '../../redux/actions/actionsCard';
 
+//lib
+import { searchParent } from '../../lib/type';
+
 //libs
 import { useDrag } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -59,15 +62,10 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 		})
 	}), [prevCard, numberList]);
 
-	const searchParent = (node: HTMLElement, searchSelector: string, selectorValue: string): HTMLElement | Function => {
-		if (node === cardRef.current) return node;
-		else return searchParent(node.parentElement!, searchSelector, selectorValue);
-	}
-
 	const handlerDragOver = (e: React.DragEvent) => {
 		const y = e.clientY;
 		const el = e.target as HTMLElement;
-		const parent = searchParent(el, 'card', 'true') as HTMLElement;
+		const parent = searchParent(el, cardRef.current) as HTMLElement;
 		if (prevCard && parent !== prevCard?.el)
 			dispatch(updateCardF(prevCard.id));
 

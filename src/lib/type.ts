@@ -1,5 +1,7 @@
-export function isHTMLElemnt(v: unknown): v is HTMLElement {
-	console.log(v)
-	return true
-	// return Boolean((v as HTMLElement).style);
+export const searchParent = (
+	node: HTMLElement, 
+	searchParentEl: HTMLElement
+): HTMLElement | Function => {
+	if (node === searchParentEl) return node;
+	else return searchParent(node.parentElement!, searchParentEl);
 }

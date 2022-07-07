@@ -9,9 +9,9 @@ import { BordList } from '../bord';
 export const Bord = () => {
 	return (
 		<div className={style.bord}>
-			<div className={style.bord__title}>
+			<h2 className={style.bord__title}>
 				Border title
-			</div>
+			</h2>
 			<BordList />
 		</div>
 	)

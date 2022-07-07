@@ -86,21 +86,6 @@ export function changeData(
 		}),
 	}
 
-	let list: any[];
-	if (positionDrop === 'before') {
-		list = [
-			...data[indexFinallCell].list.slice(0, numberCardDrop), 
-			srcEl, 
-			...data[indexFinallCell].list.slice(numberCardDrop),
-		];
-		console.log(list)
-	} else {
-		list = [
-			...data[indexFinallCell].list.slice(0, numberCardDrop+1), 
-			srcEl, 
-			...data[indexFinallCell].list.slice(numberCardDrop+1),
-		];
-	}
 	data[indexFinallCell] = {
 		...data[indexFinallCell],
 		list: positionDrop === 'before' ? 

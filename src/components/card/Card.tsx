@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState, useRef } from 'react';
-import { changeData, TypeCard } from '../../data/dataCell';
+import { changeDataCard, TypeCard } from '../../data/dataCell';
 
 //styles
 import style from './card.module.scss';
@@ -36,14 +36,14 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 
 	const { prevCard, updateCard } = useSelector((r: R) => r.reducerCard);
 
-	const [{ isDragging }, drag] = useDrag(() => ({
+	const [{ isDragging, typeDragEll }, drag] = useDrag(() => ({
 		type: 'card',
 		end: (_, monitor) => {
 			if (!monitor.getDropResult()) return;
 			dispatch(updateCardF(prevCard!.id));
 			const { numberCardDrop, positionDrop } = prevCard!;
 			const { idSrcCell, idSrcCard, idFinalCell } = monitor.getDropResult() as TypeDataEndDragging;
-			const data = changeData(idSrcCell, idSrcCard, idFinalCell, numberCardDrop!, positionDrop);
+			const data = changeDataCard(idSrcCell, idSrcCard, idFinalCell, numberCardDrop!, positionDrop);
 			setPositionDrop('noDrag');
 			dispatch(setDataBord(data));
 		},
@@ -58,20 +58,22 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 			return monitor.getItem().idSrcCard === dataCard.id
 		},
 		collect: (monitor) => ({
-			isDragging: monitor.isDragging()
+			isDragging: monitor.isDragging(),
+			typeDragEll: monitor.getItemType(),
 		})
 	}), [prevCard, numberList]);
 
 	const handlerDragOver = (e: React.DragEvent) => {
+		if (typeDragEll !== 'card') return;
 		const y = e.clientY;
 		const el = e.target as HTMLElement;
 		const parent = searchParent(el, cardRef.current) as HTMLElement;
-		if (prevCard && parent !== prevCard?.el)
+		if (prevCard && parent !== prevCard.el)
 			dispatch(updateCardF(prevCard.id));
 
 		const coordEl = parent.getBoundingClientRect();
 		if (y < Math.ceil(coordEl.top + (coordEl.height / 2))) {
-			if (positionDrop === 'before' && parent === prevCard?.el && prevCard !== null) return;
+			if (positionDrop === 'before' && prevCard && parent === prevCard.el) return;
 			else {
 				setPositionDrop('before');
 				dispatch(setPrevCard({
@@ -82,7 +84,7 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 				}));
 			}
 		} else {
-			if (positionDrop === 'after' && parent === prevCard!.el && prevCard !== null) return;
+			if (positionDrop === 'after' && prevCard && parent === prevCard.el) return;
 			else {
 				setPositionDrop('after');
 				dispatch(setPrevCard({
@@ -99,7 +101,12 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 		if (updateCard === dataCard.id && positionDrop !== 'noDrag') {
 			setPositionDrop('noDrag');
 		}
-	}, [updateCard, dataCard.id, positionDrop, numberList]);
+	}, [
+		updateCard,
+		dataCard.id,
+		positionDrop,
+		numberList
+	]);
 
 	return (
 		<li
@@ -110,7 +117,6 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 						style.card__bottomline : ''
 				}
 			`}
-			id={dataCard.id.toString()}
 			ref={(r) => {
 				drag(r);
 				cardRef.current = r!;

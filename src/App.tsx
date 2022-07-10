@@ -6,6 +6,7 @@ import './scss/index.scss';
 
 function App() {
 	return (
+
 		<div className='app'>
 			<Bord />
 		</div>

@@ -67,7 +67,7 @@ export let data = [
 	},
 ];
 
-export function changeData(
+export function changeDataCard(
 	srcCellId: number, 
 	srcElId: number, 
 	finalCellId: number,
@@ -102,6 +102,14 @@ export function changeData(
 	}
 	return data;
 };
+
+export function changeDataCell(
+	srcCellId: number,
+	numberCellDrop: number,
+	positionDrop: Omit<PositionDrop, 'noDrag'>,
+) {
+
+}
 
 export type TypeCard = {
 	id: number;

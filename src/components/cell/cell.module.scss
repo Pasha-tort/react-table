@@ -3,18 +3,58 @@
 
 .cell {
 	background: #fff;
+	position: relative;
 	min-height: 200px;
 	height: 100%;
 	width: 300px;
 	list-style-type: none;
-	border-top-left-radius: 12px;
-	border-top-right-radius: 12px;
 	box-shadow: 0px;
-	overflow: hidden;
 	transition: 0.2s all;
-	margin-left: 30px;
+	margin-left: $cell-margin-left;
 	&:first-child {
 		margin-left: 0px;
+	}
+	&::before {
+		content: "";
+		position: absolute;
+		display: none;
+		width: 6px;
+		height: 100%;
+		background: rgba($title-background-color-card, 1);
+		left: -18px;
+		z-index: 10;
+		border-radius: 2px;
+	}
+	&::after {
+		content: "";
+		position: absolute;
+		display: none;
+		width: 6px;
+		height: 100%;
+		background: rgba($title-background-color-card, 1);
+		right: -18px;
+		z-index: 10;
+		border-radius: 2px;
+	}
+	&__beforeline {
+		&::before {
+			top: 0px;
+			display: block;
+		}
+	}
+	&__afterline {
+		&::after {
+			top: 0px;
+			display: block;
+		}
+	}
+	&__wrapper {
+		opacity: 1;
+		transition: 0.15s all;
+		&_dragging {
+			transition: 0.15s all;
+			opacity: 0.5;
+		}
 	}
 	&__hover {
 		box-shadow: 0 0 12px rgba(0,0,0,0.5);
@@ -32,7 +72,7 @@
 		background: $title-background-color;
 		text-transform: uppercase;
 	}
-	&__wrapper {
+	&__wrapperList {
 		padding: 20px;
 		display: flex;
 		flex-direction: column;

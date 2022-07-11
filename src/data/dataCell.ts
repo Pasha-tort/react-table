@@ -108,7 +108,23 @@ export function changeDataCell(
 	numberCellDrop: number,
 	positionDrop: Omit<PositionDrop, 'noDrag'>,
 ) {
+	const indexSrcCell = data.findIndex(cell => cell.id === srcCellId);
+	const srcEll = data[indexSrcCell];
 
+	data = data.filter(cell => cell.id !== srcEll.id);
+
+	data = positionDrop === "before" ?
+		[
+			...data.slice(0, numberCellDrop),
+			srcEll,
+			...data.slice(numberCellDrop),
+		] :
+		[
+			...data.slice(0, numberCellDrop),
+			srcEll,
+			...data.slice(numberCellDrop),
+		];
+	return data;
 }
 
 export type TypeCard = {

@@ -24,7 +24,7 @@ export const reducerCell = (
 		case TypeReducerCell.updateCard:
 			return {
 				...state,
-				updateCard: (action as TypeActionUpdateCell).payload,
+				updateCell: (action as TypeActionUpdateCell).payload,
 			}
 		default:
 			return state;

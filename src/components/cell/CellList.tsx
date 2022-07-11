@@ -54,7 +54,7 @@ export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 	}
 
 	return (
-		<div className={style.cell__wrapper}>
+		<div className={style.cell__wrapperList}>
 			<ul
 				onDragEnter={handlerDragEnter}
 				onDragLeave={handlerDragLeave}

@@ -27,7 +27,7 @@ type PropsDataCell = {
 	numberCell: number;
 }
 
-export const Cell: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
+export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 
 	const dispatch = useDispatch();
 	const cellRef = useRef<HTMLElement>(null!);
@@ -41,8 +41,8 @@ export const Cell: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 			dispatch(updateCellF(prevCell!.id));
 			const { numberCellDrop, positionDrop } = prevCell!;
 			const data = changeDataCell(dataCell.id, numberCellDrop, positionDrop);
-			// setPositionDrop("noDrag");
-			// dispatch(setDataBord(data));
+			setPositionDrop("noDrag");
+			dispatch(setDataBord(data));
 		},
 		item: {
 			idSrcCell: dataCell.id,
@@ -60,7 +60,7 @@ export const Cell: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 			isDragging: monitor.isDragging(),
 			typeDragEll: monitor.getItemType(),
 		}),
-	}), []);
+	}), [prevCell, numberCell]);
 
 	const handlerDragOver = (e: React.DragEvent) => {
 		if (typeDragEll !== "cell") return;
@@ -71,7 +71,7 @@ export const Cell: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 			dispatch(updateCellF(prevCell.id));
 
 		const coordEll = parent.getBoundingClientRect();
-		if (x < Math.ceil(coordEll.top + (coordEll.height / 2))) {
+		if (x < Math.ceil(coordEll.left + (coordEll.width / 2))) {
 			if (positionDrop === 'before' && prevCell && parent === prevCell.el) return;
 			else {
 				setPositionDrop('before');
@@ -104,34 +104,45 @@ export const Cell: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 		updateCell,
 		dataCell.id,
 		positionDrop,
-		numberCell
+		numberCell,
 	]);
 
 	return (
 		<li
-			className={style.cell}
+			className={`
+				${style.cell}
+				${positionDrop === 'before' ?
+					style.cell__beforeline : positionDrop === 'after' ?
+						style.cell__afterline : ""
+				}
+			`}
 			ref={r => {
 				drag(r);
 				cellRef.current = r!;
 			}}
-			style={isDragging ? { opacity: 0.5 } : {}}
 			onDragOver={(e) => handlerDragOver(e)}
 		>
-			<h3
-				className={style.cell__title}
+			<div
+				className={`
+					${style.cell__wrapper}
+					${isDragging ? style.cell__wrapper_dragging : style.cell__wrapper}
+				`}
 			>
-				{dataCell.title}
-			</h3>
-			<CellList cards={dataCell.list} id={dataCell.id} />
+				<h3
+					className={style.cell__title}
+				>
+					{dataCell.title}
+				</h3>
+				<CellList cards={dataCell.list} id={dataCell.id} />
+			</div>
 		</li >
 	)
 }
 
-// export const Cell = React.memo(CellMemo, (prev, next) => {
-// 	// false - обновляем (нюанс react.memo)
-// 	// if (prev.numberCell === next.numberCell)
-// 	// 	return true;
-// 	// return false
-// 	return false
-// });
+export const Cell = React.memo(CellMemo, (prev, next) => {
+	// false - обновляем (нюанс react.memo)
+	if (prev.numberCell === next.numberCell)
+		return true;
+	return false
+});
 

@@ -24,7 +24,7 @@ import { setDataBord } from '../../redux/actions/actionsBord';
 
 type PropsDataCell = {
 	dataCell: TypeCell,
-	numberCell: number;
+	numberCell: number,
 }
 
 export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
@@ -69,7 +69,6 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 		const parent = searchParent(el, cellRef.current) as HTMLElement;
 		if (prevCell && parent !== prevCell.el)
 			dispatch(updateCellF(prevCell.id));
-
 		const coordEll = parent.getBoundingClientRect();
 		if (x < Math.ceil(coordEll.left + (coordEll.width / 2))) {
 			if (positionDrop === 'before' && prevCell && parent === prevCell.el) return;
@@ -97,8 +96,11 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 	}
 
 	useEffect(() => {
-		if (updateCell === dataCell.id && positionDrop !== 'noDrag')
+		if (updateCell === dataCell.id && positionDrop !== 'noDrag') {
+			// 0 -тоесть сброс на нулевой айдишник;
+			// dispatch(updateCellF(0));
 			setPositionDrop('noDrag');
+		}
 	}, [
 		dataCell.list.length,
 		updateCell,
@@ -141,8 +143,10 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 
 export const Cell = React.memo(CellMemo, (prev, next) => {
 	// false - обновляем (нюанс react.memo)
-	if (prev.numberCell === next.numberCell)
-		return true;
+	// if (prev.numberCell === next.numberCell) {
+	// 	console.log('равен', next.dataCell.id)
+	// 	return true;
+	// }
 	return false
 });
 

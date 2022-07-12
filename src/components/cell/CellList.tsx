@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 
 //libs
 import { useDrop } from 'react-dnd';
@@ -24,6 +24,7 @@ type DataOfHover = {
 export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 
 	const [background, setBackground] = useState<string>('');
+	const cardsListRef = useRef<HTMLUListElement>(null!);
 
 	const [{ isOver }, drop] = useDrop(() => ({
 		accept: 'card',
@@ -39,11 +40,12 @@ export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 	}), [cards.length]);
 
 	useEffect(() => {
-
+		const { height } = cardsListRef.current.getBoundingClientRect();
+		cardsListRef.current.style.height = `${height}px`;
 	}, [cards.length]);
 
 	useEffect(() => {
-		if (cards.length) setBackground('')
+		if (cards.length) setBackground('');
 	}, [cards]);
 
 	const handlerDragEnter = () => {
@@ -58,7 +60,10 @@ export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 			<ul
 				onDragEnter={handlerDragEnter}
 				onDragLeave={handlerDragLeave}
-				ref={drop}
+				ref={(r) => {
+					drop(r);
+					cardsListRef.current = r!;
+				}}
 				className={`${style.cell__list} ${background}`}
 			>
 				{

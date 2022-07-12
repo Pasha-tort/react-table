@@ -99,6 +99,8 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 
 	useEffect(() => {
 		if (updateCard === dataCard.id && positionDrop !== 'noDrag') {
+			// 0 тоесть сбрасываем на нулеовй айдишник
+			// dispatch(updateCardF(0))
 			setPositionDrop('noDrag');
 		}
 	}, [

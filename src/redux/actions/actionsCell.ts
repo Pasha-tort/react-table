@@ -7,7 +7,7 @@ export const setPrevCell = (res: PrevCell) => {
 	}
 }
 
-export const updateCellF = (res: number) => {
+export const updateCellF = (res: string | null) => {
 	return {
 		type: TypeReducerCell.updateCard,
 		payload: res,

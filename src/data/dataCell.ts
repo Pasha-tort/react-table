@@ -2,64 +2,64 @@ import { PositionDrop } from '../redux/types/typeCard';
 
 export let data = [
 	{
-		id: 1,
+		id: '1',
 		title: "Нужно сделать",
 		list: [
 			{
-				id: 1,
+				id: '1',
 				title: 'First card',
 				desc: 'First card desc',
 			},
 			{
-				id: 5,
+				id: '5',
 				title: 'Five card',
 				desc: 'Five card desc',
 			},
 		],
 	},
 	{
-		id: 2,
+		id: '2',
 		title: "В работе",
 		list: [
 			{
-				id: 2,
+				id: '2',
 				title: 'Second card',
 				desc: 'Second card desc',
 			},
 			{
-				id: 6,
+				id: '6',
 				title: 'Six card',
 				desc: 'Six card desc',
 			},
 		],
 	},
 	{
-		id: 3,
+		id: '3',
 		title: "В тестировании",
 		list: [
 			{
-				id: 3,
+				id: '3',
 				title: 'Third card',
 				desc: 'Third crad desc',
 			},
 			{
-				id: 7,
+				id: '7',
 				title: 'Seven card',
 				desc: 'Seven card desc',
 			},
 		],
 	},
 	{ 
-		id: 4,
+		id: '4',
 		title: "Выполнено",
 		list: [
 			{
-				id: 4,
+				id: '4',
 				title: 'Fourth card',
 				desc: 'Fourth crad desc',
 			},
 			{
-				id: 8,
+				id: '8',
 				title: 'Eight card',
 				desc: 'Eight card desc',
 			},
@@ -68,9 +68,9 @@ export let data = [
 ];
 
 export function changeDataCard(
-	srcCellId: number, 
-	srcElId: number, 
-	finalCellId: number,
+	srcCellId: string, 
+	srcElId: string, 
+	finalCellId: string,
 	numberCardDrop: number,
 	positionDrop: Omit<PositionDrop, 'noDrag'>,
 ) {
@@ -95,16 +95,16 @@ export function changeDataCard(
 				...data[indexFinallCell].list.slice(numberCardDrop),
 			] :
 			[
-				...data[indexFinallCell].list.slice(0, numberCardDrop+1), 
+				...data[indexFinallCell].list.slice(0, numberCardDrop), 
 				srcEl, 
-				...data[indexFinallCell].list.slice(numberCardDrop+1),
+				...data[indexFinallCell].list.slice(numberCardDrop),
 			]
 	}
 	return data;
 };
 
 export function changeDataCell(
-	srcCellId: number,
+	srcCellId: string,
 	numberCellDrop: number,
 	positionDrop: Omit<PositionDrop, 'noDrag'>,
 ) {
@@ -127,13 +127,22 @@ export function changeDataCell(
 	return data;
 }
 
+export function addCard(dataCard: TypeCard, numberCell: number) {
+	data[numberCell].list.push(dataCard);
+	return data;
+}
+export function addCell(dataCell: TypeCell) {
+	data.push(dataCell);
+	return data;
+}
+
 export type TypeCard = {
-	id: number;
+	id: string;
 	title: string,
 	desc: string,
 }
 export type TypeCell = {
-	id: number;
+	id: string;
 	title: string,
 	list: TypeCard[],
 }

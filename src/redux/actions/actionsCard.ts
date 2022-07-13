@@ -7,7 +7,7 @@ export const setPrevCard = (res: PrevCard) => {
 	}
 }
 
-export const updateCardF = (res: number) => {
+export const updateCardF = (res: string | null) => {
 	return {
 		type: TypeReducerCard.updateCard,
 		payload: res,

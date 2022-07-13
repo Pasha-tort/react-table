@@ -8,7 +8,7 @@ import {
 
 const initialState = {
 	prevCell: null,
-	updateCell: 0,
+	updateCell: null,
 };
 
 export const reducerCell = (

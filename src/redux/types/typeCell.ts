@@ -1,11 +1,11 @@
 export type TypeCell = {
 	prevCell: PrevCell | null;
-	updateCell: number;
+	updateCell: string | null;
 }
 
 export type PrevCell = {
 	el: HTMLElement;
-	id: number;
+	id: string;
 	numberCellDrop: number;
 	positionDrop: PositionDrop;
 }
@@ -21,6 +21,6 @@ export type TypeActionPrevCell = {
 }
 export type TypeActionUpdateCell = {
 	type: TypeReducerCell,
-	payload: number;
+	payload: string;
 }
 export type TypeActionCell = TypeActionPrevCell | TypeActionUpdateCell;

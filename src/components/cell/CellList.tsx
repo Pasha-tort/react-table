@@ -1,10 +1,18 @@
 import React, { FC, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 
 //libs
 import { useDrop } from 'react-dnd';
+import { v4 as uuid } from 'uuid';
 
 //components
 import { Card } from '../card';
+
+//actions
+import { setDataBord } from '../../redux/actions/actionsBord';
+
+//data
+import { addCard } from "../../data/dataCell";
 
 //styles
 import style from './cell.module.scss';
@@ -14,19 +22,22 @@ import { TypeCard } from '../../data/dataCell';
 import { useState } from 'react';
 type PropsCellList = {
 	cards: TypeCard[],
-	id: number,
+	id: string,
+	numberCell: number;
 }
 type DataOfHover = {
-	idSrcCard: number,
-	idSrcCell: number,
+	idSrcCard: string,
+	idSrcCell: string,
 }
 
-export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
+export const CellList: FC<PropsCellList> = ({ cards, id, numberCell }) => {
 
 	const [background, setBackground] = useState<string>('');
 	const cardsListRef = useRef<HTMLUListElement>(null!);
+	const dispatch = useDispatch();
 
-	const [{ isOver }, drop] = useDrop(() => ({
+	// eslint-disable-next-line
+	const [{ }, drop] = useDrop(() => ({
 		accept: 'card',
 		drop: (item: DataOfHover, monitor) => {
 			return {
@@ -40,8 +51,6 @@ export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 	}), [cards.length]);
 
 	useEffect(() => {
-		const { height } = cardsListRef.current.getBoundingClientRect();
-		cardsListRef.current.style.height = `${height}px`;
 	}, [cards.length]);
 
 	useEffect(() => {
@@ -53,6 +62,15 @@ export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 	}
 	const handlerDragLeave = () => {
 		if (!cards.length) setBackground('');
+	}
+
+	const handlerAddCard = () => {
+		const data = addCard({
+			id: uuid(),
+			title: "",
+			desc: "",
+		}, numberCell);
+		dispatch(setDataBord(data));
 	}
 
 	return (
@@ -77,11 +95,12 @@ export const CellListMemo: FC<PropsCellList> = ({ cards, id }) => {
 					})
 				}
 			</ul>
-			<button className={style.cell__btn}>
+			<button
+				onClick={handlerAddCard}
+				className={style.cell__btn}
+			>
 				+
 			</button>
 		</div>
 	)
 }
-
-export const CellList = React.memo(CellListMemo);

@@ -1,8 +1,13 @@
 import React, { FC, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 //libs
 import { useDrop } from 'react-dnd';
+import { v4 as uuid } from "uuid";
+
+//data
+import { addCell } from "../../data/dataCell";
 
 //Components
 import { Cell } from '../cell';
@@ -11,12 +16,17 @@ import { Cell } from '../cell';
 import style from './bord.module.scss';
 
 //actions
+import { setDataBord } from '../../redux/actions/actionsBord';
+
+//types
 import { R } from '../../redux/reducers';
 
 export const BordList: FC = () => {
 
 	const { data } = useSelector((state: R) => state.reducerBord);
 	const bordListRef = useRef<HTMLUListElement>(null!);
+	const dispatch = useDispatch();
+
 	const [, drop] = useDrop(() => ({
 		accept: "cell",
 		collect: (monitor) => ({
@@ -24,10 +34,14 @@ export const BordList: FC = () => {
 		}),
 	}), [data.length]);
 
-	useEffect(() => {
-		const { width } = bordListRef.current.getBoundingClientRect();
-		bordListRef.current.style.width = `${width}px`;
-	});
+	const handlerAddCell = () => {
+		const data = addCell({
+			id: uuid(),
+			title: "",
+			list: [],
+		});
+		dispatch(setDataBord(data));
+	}
 
 	return (
 		<div className={style.bord__wrapper}>
@@ -48,7 +62,10 @@ export const BordList: FC = () => {
 					})
 				}
 			</ul>
-			<button className={style.bord__btn}>
+			<button
+				onClick={handlerAddCell}
+				className={style.bord__btn}
+			>
 				+
 			</button>
 		</div>

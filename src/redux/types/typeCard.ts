@@ -1,11 +1,11 @@
 export type TypeCard = {
 	prevCard: PrevCard | null;
-	updateCard: number;
+	updateCard: string | null;
 }
 
 export type PrevCard = {
   	el: HTMLElement;
-  	id: number;
+  	id: string;
   	numberCardDrop: number | null;
 	positionDrop: PositionDrop;
 }
@@ -22,6 +22,6 @@ export type TypeActionPrevCard = {
 }
 export type TypeActionUpdateCard = {
   type : TypeReducerCard,
-  payload: number;
+  payload: string;
 }
 export type TypeActionCard = TypeActionPrevCard | TypeActionUpdateCard;

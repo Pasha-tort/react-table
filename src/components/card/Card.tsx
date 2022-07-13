@@ -1,4 +1,8 @@
 import React, { FC, useEffect, useState, useRef } from 'react';
+import { useDrag } from 'react-dnd';
+import { useDispatch, useSelector } from 'react-redux';
+
+//data
 import { changeDataCard, TypeCard } from '../../data/dataCell';
 
 //styles
@@ -11,22 +15,18 @@ import { setPrevCard, updateCardF } from '../../redux/actions/actionsCard';
 //lib
 import { searchParent } from '../../lib/type';
 
-//libs
-import { useDrag } from 'react-dnd';
-import { useDispatch, useSelector } from 'react-redux';
-
 //types
 import { R } from '../../redux/reducers';
 import { PositionDrop } from '../../redux/types/typeCard';
 type PropsCard = {
 	dataCard: TypeCard,
-	idCell: number,
+	idCell: string,
 	numberList: number;
 }
 type TypeDataEndDragging = {
-	idFinalCell: number,
-	idSrcCard: number,
-	idSrcCell: number,
+	idFinalCell: string,
+	idSrcCard: string,
+	idSrcCell: string,
 }
 
 export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
@@ -100,14 +100,15 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 	useEffect(() => {
 		if (updateCard === dataCard.id && positionDrop !== 'noDrag') {
 			// 0 тоесть сбрасываем на нулеовй айдишник
-			// dispatch(updateCardF(0))
+			dispatch(updateCardF(null))
 			setPositionDrop('noDrag');
 		}
 	}, [
 		updateCard,
 		dataCard.id,
 		positionDrop,
-		numberList
+		numberList,
+		dispatch,
 	]);
 
 	return (

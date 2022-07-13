@@ -8,7 +8,7 @@ import {
 
 const initialState = {
 	prevCard: null,
-	updateCard: 0,
+	updateCard: null,
 };
 
 export const reducerCard = (state: TypeCard = initialState, action: TypeActionCard) => {

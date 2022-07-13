@@ -31,8 +31,10 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 
 	const dispatch = useDispatch();
 	const cellRef = useRef<HTMLElement>(null!);
+	const titleCellRef = useRef<HTMLHeadingElement>(null!);
 	const { prevCell, updateCell } = useSelector((r: R) => r.reducerCell);
 	const [positionDrop, setPositionDrop] = useState<PositionDrop>("noDrag");
+	const [lastClick, setLastClick] = useState<HTMLElement | null>(null);
 
 	const [{ isDragging, typeDragEll }, drag] = useDrag(() => ({
 		type: "cell",
@@ -43,6 +45,7 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 			const data = changeDataCell(dataCell.id, numberCellDrop, positionDrop);
 			setPositionDrop("noDrag");
 			dispatch(setDataBord(data));
+			setLastClick(null)
 		},
 		item: {
 			idSrcCell: dataCell.id,
@@ -53,14 +56,16 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 		isDragging: (monitor) => {
 			return monitor.getItem().idSrcCell === dataCell.id;
 		},
-		canDrag: (monitor) => {
-			return true;
+		canDrag: () => {
+			if (lastClick === titleCellRef.current)
+				return true;
+			else return false;
 		},
 		collect: (monitor) => ({
 			isDragging: monitor.isDragging(),
 			typeDragEll: monitor.getItemType(),
 		}),
-	}), [prevCell, numberCell]);
+	}), [prevCell, numberCell, lastClick]);
 
 	const handlerDragOver = (e: React.DragEvent) => {
 		if (typeDragEll !== "cell") return;
@@ -95,10 +100,14 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 		}
 	}
 
+	const handlerLastClick = (e: React.MouseEvent) => {
+		setLastClick(e.target as HTMLElement)
+	}
+
 	useEffect(() => {
 		if (updateCell === dataCell.id && positionDrop !== 'noDrag') {
 			// 0 -тоесть сброс на нулевой айдишник;
-			// dispatch(updateCellF(0));
+			dispatch(updateCellF(null));
 			setPositionDrop('noDrag');
 		}
 	}, [
@@ -107,6 +116,7 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 		dataCell.id,
 		positionDrop,
 		numberCell,
+		dispatch,
 	]);
 
 	return (
@@ -132,10 +142,12 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 			>
 				<h3
 					className={style.cell__title}
+					onMouseDown={handlerLastClick}
+					ref={titleCellRef}
 				>
 					{dataCell.title}
 				</h3>
-				<CellList cards={dataCell.list} id={dataCell.id} />
+				<CellList numberCell={numberCell} cards={dataCell.list} id={dataCell.id} />
 			</div>
 		</li >
 	)

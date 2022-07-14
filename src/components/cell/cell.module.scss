@@ -58,7 +58,6 @@
 	&__hover {
 		box-shadow: 0 0 12px rgba(0,0,0,0.5);
 		transition: 0.2s all;
-		cursor: move;
 	}
 	&__title {
 		display: flex;
@@ -70,6 +69,7 @@
 		color: $title-color;
 		background: $title-background-color;
 		text-transform: uppercase;
+		cursor: pointer;
 	}
 	&__wrapperList {
 		padding: 20px;

@@ -33,6 +33,7 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 	const dispatch = useDispatch();
 	const cardRef = useRef<HTMLElement>(null!);
 	const [positionDrop, setPositionDrop] = useState<PositionDrop>('noDrag');
+	const [hoverCard, setHoverCard] = useState<boolean>(false);
 
 	const { prevCard, updateCard } = useSelector((r: R) => r.reducerCard);
 
@@ -65,6 +66,7 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 
 	const handlerDragOver = (e: React.DragEvent) => {
 		if (typeDragEll !== 'card') return;
+		if (hoverCard) setHoverCard(false);
 		const y = e.clientY;
 		const el = e.target as HTMLElement;
 		const parent = searchParent(el, cardRef.current) as HTMLElement;
@@ -97,12 +99,23 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 		}
 	}
 
+	const handlerHoverCard = () => {
+		if (!hoverCard)
+			setHoverCard(true);
+	}
+
+	const handlerNoHoverCard = () => {
+		setHoverCard(false);
+	}
+
+	useEffect(() => { }, [hoverCard]);
+
 	useEffect(() => {
 		if (updateCard === dataCard.id && positionDrop !== 'noDrag') {
-			// 0 тоесть сбрасываем на нулеовй айдишник
 			dispatch(updateCardF(null))
 			setPositionDrop('noDrag');
 		}
+		setHoverCard(false);
 	}, [
 		updateCard,
 		dataCard.id,
@@ -119,12 +132,15 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 					style.card__topline : positionDrop === 'after' ?
 						style.card__bottomline : ''
 				}
+				${hoverCard ? style.card__hover : ""}
 			`}
 			ref={(r) => {
 				drag(r);
 				cardRef.current = r!;
 			}}
 			onDragOver={(e) => handlerDragOver(e)}
+			onMouseOver={handlerHoverCard}
+			onMouseLeave={handlerNoHoverCard}
 		>
 			<div style={isDragging ? { opacity: 0.5 } : {}}
 				className={`

@@ -7,6 +7,7 @@ import { CellList } from './CellList';
 
 //actions
 import { setPrevCell, updateCellF } from '../../redux/actions/actionsCell';
+import { setOpenModalMini } from "../../redux/actions/actionsModal";
 
 //styles
 import style from './cell.module.scss';
@@ -21,6 +22,7 @@ import { searchParent } from '../../lib/type';
 import { R } from '../../redux/reducers';
 import { PositionDrop } from '../../redux/types/typeCard';
 import { setDataBord } from '../../redux/actions/actionsBord';
+import { ModalMini } from '../modal/modalMini';
 
 type PropsDataCell = {
 	dataCell: TypeCell,
@@ -33,8 +35,10 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 	const cellRef = useRef<HTMLElement>(null!);
 	const titleCellRef = useRef<HTMLHeadingElement>(null!);
 	const { prevCell, updateCell } = useSelector((r: R) => r.reducerCell);
+	const { openModalMini } = useSelector((r: R) => r.reducerModal);
 	const [positionDrop, setPositionDrop] = useState<PositionDrop>("noDrag");
 	const [lastClick, setLastClick] = useState<HTMLElement | null>(null);
+	const [hoverTitle, setHoverTitle] = useState<boolean>(false);
 
 	const [{ isDragging, typeDragEll }, drag] = useDrag(() => ({
 		type: "cell",
@@ -69,6 +73,7 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 
 	const handlerDragOver = (e: React.DragEvent) => {
 		if (typeDragEll !== "cell") return;
+		if (hoverTitle) setHoverTitle(false)
 		const x = e.clientX;
 		const el = e.target as HTMLElement;
 		const parent = searchParent(el, cellRef.current) as HTMLElement;
@@ -104,12 +109,30 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 		setLastClick(e.target as HTMLElement)
 	}
 
+	const handlerHoverTitle = (e: React.MouseEvent) => {
+		if (!hoverTitle)
+			setHoverTitle(true);
+	}
+
+	const handlerNoHoverTitle = () => {
+		setHoverTitle(false);
+	}
+
+	const handlerEditTitle = () => {
+		dispatch(setOpenModalMini({
+			idCell: dataCell.id,
+			state: true,
+		}));
+	}
+
+	useEffect(() => { }, [hoverTitle, openModalMini]);
+
 	useEffect(() => {
 		if (updateCell === dataCell.id && positionDrop !== 'noDrag') {
-			// 0 -тоесть сброс на нулевой айдишник;
 			dispatch(updateCellF(null));
 			setPositionDrop('noDrag');
 		}
+		setHoverTitle(false);
 	}, [
 		dataCell.list.length,
 		updateCell,
@@ -134,16 +157,24 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 			}}
 			onDragOver={(e) => handlerDragOver(e)}
 		>
+			{
+				openModalMini.state && openModalMini.idCell === dataCell.id ?
+					<ModalMini /> : null
+			}
 			<div
 				className={`
 					${style.cell__wrapper}
 					${isDragging ? style.cell__wrapper_dragging : style.cell__wrapper}
+					${hoverTitle ? style.cell__hover : ""}
 				`}
 			>
 				<h3
 					className={style.cell__title}
 					onMouseDown={handlerLastClick}
+					onMouseOver={handlerHoverTitle}
+					onMouseLeave={handlerNoHoverTitle}
 					ref={titleCellRef}
+					onClick={handlerEditTitle}
 				>
 					{dataCell.title}
 				</h3>

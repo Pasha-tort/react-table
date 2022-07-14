@@ -1,0 +1,15 @@
+@import '../../scss/variables.scss';
+
+.modal{
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	.modalWrapper {
+		width: 500px;
+		height: 700px;
+		background: #D0D0D0;
+	}
+}

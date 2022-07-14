@@ -7,6 +7,7 @@
 	height: 170px;
 	box-shadow: 0px;
 	margin-top: 20px;
+	cursor: pointer;
 	&__wrapper {
 		display: flex;
 		flex-direction: column;
@@ -56,7 +57,6 @@
 	&__hover {
 		transition: 0.2s all;
 		box-shadow: 0 0 8px rgba(0,0,0,0.5);
-		cursor: pointer;
 	}
 	&__title {
 		background: $title-background-color-card;

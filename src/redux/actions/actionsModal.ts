@@ -1,13 +1,7 @@
-import { TypeReducerModal, StateModalMini } from '../types/typeModal';
+import { TypeReducerModal, StateModal } from '../types/typeModal';
 
-export const setOpenModalMini = (res: StateModalMini) => {
-	return {
-		type: TypeReducerModal.openModalMini,
-		payload: res,
-	}
-}
 
-export const setOpenModal = (res: boolean) => {
+export const setOpenModal = (res: StateModal) => {
 	return {
 		type: TypeReducerModal.openModal,
 		payload: res,

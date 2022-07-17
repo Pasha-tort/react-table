@@ -1,11 +1,8 @@
 import { StateModal, TypeActionModal, TypeReducerModal } from '../types/typeModal';
 
 const initialState = {
-	openModalMini: {
-		idCell: null,
-		state: false,
-	},
 	openModal: false,
+	children: null,
 }
 
 export const reducerModal = (
@@ -17,11 +14,6 @@ export const reducerModal = (
 			return {
 				...state,
 				openModal: action.payload,
-			}
-		case TypeReducerModal.openModalMini:
-			return {
-				...state,
-				openModalMini: action.payload,
 			}
 		default:
 			return state;

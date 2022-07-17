@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -7,7 +7,6 @@ import { CellList } from './CellList';
 
 //actions
 import { setPrevCell, updateCellF } from '../../redux/actions/actionsCell';
-import { setOpenModalMini } from "../../redux/actions/actionsModal";
 
 //styles
 import style from './cell.module.scss';
@@ -35,7 +34,8 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 	const cellRef = useRef<HTMLElement>(null!);
 	const titleCellRef = useRef<HTMLHeadingElement>(null!);
 	const { prevCell, updateCell } = useSelector((r: R) => r.reducerCell);
-	const { openModalMini } = useSelector((r: R) => r.reducerModal);
+	// const { openModalMini } = useSelector((r: R) => r.reducerModal);
+	const [openModalMini, setOpenModalMini] = useState<boolean>(false);
 	const [positionDrop, setPositionDrop] = useState<PositionDrop>("noDrag");
 	const [lastClick, setLastClick] = useState<HTMLElement | null>(null);
 	const [hoverTitle, setHoverTitle] = useState<boolean>(false);
@@ -119,13 +119,14 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 	}
 
 	const handlerEditTitle = () => {
-		dispatch(setOpenModalMini({
-			idCell: dataCell.id,
-			state: true,
-		}));
+		if (!openModalMini)
+			setOpenModalMini(true);
 	}
 
-	useEffect(() => { }, [hoverTitle, openModalMini]);
+	const handlerClose = useCallback(() => setOpenModalMini(false), []);
+
+	useEffect(() => {
+	}, [hoverTitle, openModalMini]);
 
 	useEffect(() => {
 		if (updateCell === dataCell.id && positionDrop !== 'noDrag') {
@@ -158,8 +159,8 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 			onDragOver={(e) => handlerDragOver(e)}
 		>
 			{
-				openModalMini.state && openModalMini.idCell === dataCell.id ?
-					<ModalMini /> : null
+				openModalMini ?
+					<ModalMini close={handlerClose} defaultValue={dataCell.title} /> : null
 			}
 			<div
 				className={`

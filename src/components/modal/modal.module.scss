@@ -3,13 +3,18 @@
 .modal{
 	width: 100vw;
 	height: 100vh;
-	position: absolute;
+	left: 0px;
+	top: 0px;
+	position: fixed;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	background: rgba(0,0,0,.7);
+	backdrop-filter: blur(10px);
 	.modalWrapper {
-		width: 500px;
-		height: 700px;
+		width: 50vw;
+		height: 60vh;
 		background: #D0D0D0;
+		padding: 15px;
 	}
 }

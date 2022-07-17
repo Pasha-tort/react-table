@@ -5,12 +5,16 @@ import { useDispatch, useSelector } from 'react-redux';
 //data
 import { changeDataCard, TypeCard } from '../../data/dataCell';
 
+//components
+import { EditModal } from './EditModal';
+
 //styles
 import style from './card.module.scss';
 
 //actions
 import { setDataBord } from '../../redux/actions/actionsBord';
 import { setPrevCard, updateCardF } from '../../redux/actions/actionsCard';
+import { setOpenModal } from '../../redux/actions/actionsModal';
 
 //lib
 import { searchParent } from '../../lib/type';
@@ -18,6 +22,7 @@ import { searchParent } from '../../lib/type';
 //types
 import { R } from '../../redux/reducers';
 import { PositionDrop } from '../../redux/types/typeCard';
+import { Modal } from '../modal/modal';
 type PropsCard = {
 	dataCard: TypeCard,
 	idCell: string,
@@ -34,6 +39,7 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 	const cardRef = useRef<HTMLElement>(null!);
 	const [positionDrop, setPositionDrop] = useState<PositionDrop>('noDrag');
 	const [hoverCard, setHoverCard] = useState<boolean>(false);
+	const [openModal, setOpenModal] = useState<boolean>(false);
 
 	const { prevCard, updateCard } = useSelector((r: R) => r.reducerCard);
 
@@ -108,7 +114,18 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 		setHoverCard(false);
 	}
 
-	useEffect(() => { }, [hoverCard]);
+	// const handlerOpenModal = () => {
+	// 	const { title, desc } = dataCard;
+	// 	dispatch(setOpenModal({
+	// 		openModal: true,
+	// 		children: <EditModal title={title} desc={desc} />,
+	// 	}));
+	// }
+	const handlerOpenModal = () => {
+		setOpenModal(true)
+	}
+
+	useEffect(() => { }, [hoverCard, openModal]);
 
 	useEffect(() => {
 		if (updateCard === dataCard.id && positionDrop !== 'noDrag') {
@@ -125,34 +142,42 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 	]);
 
 	return (
-		<li
-			className={`
-				${style.card}
-				${positionDrop === 'before' ?
-					style.card__topline : positionDrop === 'after' ?
-						style.card__bottomline : ''
-				}
-				${hoverCard ? style.card__hover : ""}
-			`}
-			ref={(r) => {
-				drag(r);
-				cardRef.current = r!;
-			}}
-			onDragOver={(e) => handlerDragOver(e)}
-			onMouseOver={handlerHoverCard}
-			onMouseLeave={handlerNoHoverCard}
-		>
-			<div style={isDragging ? { opacity: 0.5 } : {}}
+		<>
+			{openModal ?
+				<Modal close={() => setOpenModal(false)}>
+					<EditModal close={() => setOpenModal(false)} title={dataCard.title} desc={dataCard.desc} />
+				</Modal>
+				: null
+			}
+			<li
 				className={`
-					${style.card__wrapper} 
-					${isDragging ? style.card__wrapper_dragging : ''}
+					${style.card}
+					${positionDrop === 'before' ?
+						style.card__topline : positionDrop === 'after' ?
+							style.card__bottomline : ''
+					}
+					${hoverCard ? style.card__hover : ""}
 				`}
+				ref={(r) => {
+					drag(r);
+					cardRef.current = r!;
+				}}
+				onDragOver={(e) => handlerDragOver(e)}
+				onMouseOver={handlerHoverCard}
+				onMouseLeave={handlerNoHoverCard}
+				onClick={handlerOpenModal}
 			>
-				<span className={style.card__title}>{dataCard.title}</span>
-				<span className={style.card__desc}>{dataCard.desc}</span>
-				<span className={style.card__desc}>{dataCard.id}</span>
-			</div>
-		</li>
+				<div style={isDragging ? { opacity: 0.5 } : {}}
+					className={`
+						${style.card__wrapper} 
+						${isDragging ? style.card__wrapper_dragging : ''}
+					`}
+				>
+					<span className={style.card__title}>{dataCard.title}</span>
+					<span className={style.card__desc}>{dataCard.desc}</span>
+				</div>
+			</li>
+		</>
 	)
 }
 

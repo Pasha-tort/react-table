@@ -34,7 +34,6 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 	const cellRef = useRef<HTMLElement>(null!);
 	const titleCellRef = useRef<HTMLHeadingElement>(null!);
 	const { prevCell, updateCell } = useSelector((r: R) => r.reducerCell);
-	// const { openModalMini } = useSelector((r: R) => r.reducerModal);
 	const [openModalMini, setOpenModalMini] = useState<boolean>(false);
 	const [positionDrop, setPositionDrop] = useState<PositionDrop>("noDrag");
 	const [lastClick, setLastClick] = useState<HTMLElement | null>(null);

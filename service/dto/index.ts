@@ -36,47 +36,80 @@ export namespace TypeBord {
 		list: Card[];
 	}
 
-	export namespace setAfterDND {
+	export namespace setCardsAfterDND {
 		@Exclude()
 		export class Request {
-
+			@Expose()
+			srcCellId: string;
+			@Expose()
+			srcElId: string;
+			@Expose()
+			finalCellId: string;
+			@Expose()
+			numberCardDrop: number;
+			@Expose()
+			postionDrop: Omit<PositionDrop, "onDrag">
 		}
+		
+		export class Response extends Bord {}
+	}
+
+	export namespace setCellsAfterDND {
 		@Exclude()
-		export class Response {
-
+		export class Request {
+			@Expose()
+			srcCellId: string;
+			@Expose()
+			numberCellDrop: number;
+			@Expose()
+			positionDrop: Omit<PositionDrop, "noDrag">
 		}
+		export class Response extends Bord {}
+	}
+
+	export namespace addCard {
+		@Exclude()
+		export class Request {
+			@Expose()
+			dataCard: Card;
+			numberCell: number;
+		}
+		export class Response extends Bord {};
+	}
+
+	export namespace addCell {
+		@Exclude()
+		export class Request {
+			@Expose()
+			dataCell: Cell;
+		}
+		export class Response extends Bord {};
 	}
 
 	export namespace setOneCard {
 		@Exclude()
 		export class Request {
-
+			@Expose()
+			dataCard: Card;
+			@Expose()
+			id: string;
 		} 
-		@Exclude()
-		export class Response {
-			
-		}
+		export class Response extends Bord {};
 	}
 
 	export namespace setOneCell {
 		@Exclude()
 		export class Request {
-
+			@Expose()
+			dataCell: Cell;
+			@Expose()
+			id: string;
 		}
-		@Exclude()
-		export class Response {
+		export class Response extends Bord {};
 
-		}
 	}
 
 	export namespace getAllData {
-		@Exclude()
-		export class Request {
-
-		}
-		@Exclude()
-		export class Response {
-
-		}
+		export class Response extends Bord {};
 	}
 }

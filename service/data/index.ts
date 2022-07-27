@@ -127,24 +127,40 @@ export function changeDataCell(
 	return data;
 }
 
-export function addCard(dataCard: TypeCard, numberCell: number) {
+export function addCard(dataCard: TypeBord.Card, numberCell: number) {
 	data[numberCell].list.push(dataCard);
 	return data;
 }
-export function addCell(dataCell: TypeCell) {
+export function addCell(dataCell: TypeBord.Cell) {
 	data.push(dataCell);
 	return data;
 }
 
-export type TypeCard = {
-	id: string;
-	title: string,
-	desc: string,
+export function setOneCard(dataCard: TypeBord.Card, id: string) {
+	for (const cell of data) {
+		let result: boolean = false;
+		for (const card of cell.list) {
+			if (card.id === id) {
+				card.title = dataCard.title;
+				card.desc = dataCard.desc;
+				result = true;
+			}
+		}
+		if (result)
+			break;
+	}
+	return data;
 }
-export type TypeCell = {
-	id: string;
-	title: string,
-	list: TypeCard[],
+export function setOneCell(dataCell: TypeBord.Cell, id: string) {
+	for (const cell of data) {
+		if (cell.id === id) {
+			cell.title = dataCell.title;
+			break;
+		}
+	}
+	return data;
 }
 
-export type TypeBordList = TypeCell[];
+export function getAllData() {
+	return data;
+}

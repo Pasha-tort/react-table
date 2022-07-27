@@ -114,13 +114,6 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 		setHoverCard(false);
 	}
 
-	// const handlerOpenModal = () => {
-	// 	const { title, desc } = dataCard;
-	// 	dispatch(setOpenModal({
-	// 		openModal: true,
-	// 		children: <EditModal title={title} desc={desc} />,
-	// 	}));
-	// }
 	const handlerOpenModal = () => {
 		setOpenModal(true)
 	}

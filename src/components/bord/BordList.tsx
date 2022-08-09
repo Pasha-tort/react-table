@@ -16,16 +16,23 @@ import { Cell } from '../cell';
 import style from './bord.module.scss';
 
 //actions
-import { setDataBord } from '../../redux/actions/actionsBord';
+import { fetchData } from '../../redux/actions/actionsBord';
 
 //types
 import { R } from '../../redux/reducers';
+import { useHttp } from '../../hooks/useFetch';
+import { useAppDispatch } from '../../redux/hooks';
 
 export const BordList: FC = () => {
 
 	const { data } = useSelector((state: R) => state.reducerBord);
 	const bordListRef = useRef<HTMLUListElement>(null!);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
+	const { request } = useHttp();
+
+	useEffect(() => {
+		dispatch(fetchData(request))
+	}, []);
 
 	const [, drop] = useDrop(() => ({
 		accept: "cell",
@@ -35,12 +42,12 @@ export const BordList: FC = () => {
 	}), [data.length]);
 
 	const handlerAddCell = () => {
-		const data = addCell({
-			id: uuid(),
-			title: "",
-			list: [],
-		});
-		dispatch(setDataBord(data));
+		// const data = addCell({
+		// 	id: uuid(),
+		// 	title: "",
+		// 	list: [],
+		// });
+		// dispatch(setDataBord(data));
 	}
 
 	return (

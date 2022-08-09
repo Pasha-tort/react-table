@@ -1,4 +1,4 @@
-import { TypeBord } from 'dto';
+import { TypeBord } from '../dto';
 export declare let data: {
     id: string;
     title: string;

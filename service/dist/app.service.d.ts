@@ -1,4 +1,4 @@
-import { TypeBord } from 'dto';
+import { TypeBord } from './dto';
 export declare class AppService {
     constructor();
     setCardsAfterDND({ srcCellId, srcElId, finalCellId, numberCardDrop, postionDrop, }: TypeBord.setCardsAfterDND.Request): TypeBord.setCardsAfterDND.Response;

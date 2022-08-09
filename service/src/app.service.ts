@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TypeBord } from 'dto';
+import { TypeBord } from './dto';
 import { 
 	changeDataCard,
 	changeDataCell,
@@ -8,7 +8,7 @@ import {
 	setOneCard,
 	setOneCell,
 	getAllData,
-} from 'data';
+} from './data';
 
 @Injectable()
 export class AppService {

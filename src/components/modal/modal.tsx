@@ -1,8 +1,8 @@
 import { FC, ReactPortal, useEffect, useRef } from "react";
 import ReactDOM from 'react-dom';
 //styles
-import { useSelector } from 'react-redux';
-import { R } from '../../redux/reducers';
+// import { useSelector } from 'react-redux';
+// import { R } from '../../redux/reducers';
 import style from './modal.module.scss';
 import styleIndex from "../../scss/index.module.scss";
 

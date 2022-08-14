@@ -19,7 +19,7 @@ export declare namespace TypeBord {
             srcElId: string;
             finalCellId: string;
             numberCardDrop: number;
-            postionDrop: Omit<PositionDrop, "onDrag">;
+            positionDrop: "after" | "before";
         }
         class Response extends Bord {
         }
@@ -51,7 +51,6 @@ export declare namespace TypeBord {
     namespace setOneCard {
         class Request {
             dataCard: Card;
-            id: string;
         }
         class Response extends Bord {
         }

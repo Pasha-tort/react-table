@@ -1,45 +1,26 @@
-import { useCallback, useState } from "react";
+// export type Request = (url: string, method?: string, body?: BodyInit | null | undefined, headers?: {}) => Promise<any>;
+export const getRequest = () => {
 
-export type Request = (url: string, method?: string, body?: BodyInit | null | undefined, headers?: {}) => Promise<any>;
-
-
-export const useHttp = () => {
-	const [process, setProcess] = useState('waiting');
-
-	const request = useCallback(
-		async (
-			url: string,
-			method = 'GET',
-			body: BodyInit | null | undefined = null!,
-			headers: {} = { 'Content-Type': 'application/json' }
-		) => {
-
-			setProcess('loading');
-
-			try {
-				const response = await fetch(url, { method, body, headers });
-				console.log(response)
-				if (!response.ok) {
-					throw new Error(`Could not fetch ${url}, status: ${response.status}`);
-				}
-
-				const data = await response.json();
-
-				return data;
-			} catch (e) {
-				setProcess('error');
-				throw e;
+	const request = async (
+		url: string,
+		method = 'GET',
+		body: BodyInit | null | undefined = null!,
+		headers: {} = { 'Content-Type': 'application/json' }
+	) => {
+		try {
+			const response = await fetch("http://localhost:3001/api" + url, { method, body, headers });
+			if (!response.ok) {
+				throw new Error(`Could not fetch ${url}, status: ${response.status}`);
 			}
-		}, []);
 
-	const clearError = useCallback(() => {
-		setProcess('loading');
-	}, []);
+			const data = await response.json();
+			return data;
+		} catch (e) {
+			throw e;
+		}
+	}
 
 	return {
 		request,
-		clearError,
-		process,
-		setProcess
 	}
 }

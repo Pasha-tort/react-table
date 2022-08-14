@@ -88,17 +88,18 @@ export function changeDataCard(
 
 	data[indexFinallCell] = {
 		...data[indexFinallCell],
-		list: positionDrop === 'before' ? 
-			[
-				...data[indexFinallCell].list.slice(0, numberCardDrop), 
-				srcEl, 
-				...data[indexFinallCell].list.slice(numberCardDrop),
-			] :
-			[
-				...data[indexFinallCell].list.slice(0, numberCardDrop), 
-				srcEl, 
-				...data[indexFinallCell].list.slice(numberCardDrop),
-			]
+		list: indexFinallCell === indexSrcCell ?
+		[
+			...data[indexFinallCell].list.slice(0, numberCardDrop - 1), 
+			srcEl, 
+			...data[indexFinallCell].list.slice(numberCardDrop - 1),
+		] :
+		[
+			...data[indexFinallCell].list.slice(0, numberCardDrop), 
+			srcEl, 
+			...data[indexFinallCell].list.slice(numberCardDrop),
+		],
+			
 	}
 	return data;
 };
@@ -115,9 +116,9 @@ export function changeDataCell(
 
 	data = positionDrop === "before" ?
 		[
-			...data.slice(0, numberCellDrop),
+			...data.slice(0, numberCellDrop - 1),
 			srcEll,
-			...data.slice(numberCellDrop),
+			...data.slice(numberCellDrop - 1),
 		] :
 		[
 			...data.slice(0, numberCellDrop),
@@ -136,11 +137,11 @@ export function addCell(dataCell: TypeBord.Cell) {
 	return data;
 }
 
-export function setOneCard(dataCard: TypeBord.Card, id: string) {
+export function setOneCard(dataCard: TypeBord.Card) {
 	for (const cell of data) {
 		let result: boolean = false;
 		for (const card of cell.list) {
-			if (card.id === id) {
+			if (card.id === dataCard.id) {
 				card.title = dataCard.title;
 				card.desc = dataCard.desc;
 				result = true;

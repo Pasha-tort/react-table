@@ -44,7 +44,7 @@ export declare function addCell(dataCell: TypeBord.Cell): {
         desc: string;
     }[];
 }[];
-export declare function setOneCard(dataCard: TypeBord.Card, id: string): {
+export declare function setOneCard(dataCard: TypeBord.Card): {
     id: string;
     title: string;
     list: {

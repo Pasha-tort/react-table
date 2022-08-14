@@ -6,7 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CellList } from './CellList';
 
 //actions
-import { setPrevCell, updateCellF } from '../../redux/actions/actionsCell';
+// import { setPrevCell, updateCellF } from '../../redux/actions/actionsCell';
+import { setPrevCell, updateCellFunc } from '../../redux/reducers/sliceCell';
 
 //styles
 import style from './cell.module.scss';
@@ -18,10 +19,15 @@ import { changeDataCell, TypeCell } from '../../data/dataCell';
 import { searchParent } from '../../lib/type';
 
 //types
-import { R } from '../../redux/reducers';
-import { PositionDrop } from '../../redux/types/typeCard';
-import { setDataBord } from '../../redux/actions/actionsBord';
+// import { R } from '../../redux/reducers';
+// import { PositionDrop } from '../../redux/types/typeCard';
+import { PositionDrop } from '../../redux/reducers/sliceCell';
+// import { setDataBord } from '../../redux/actions/actionsBord';
 import { ModalMini } from '../modal/modalMini';
+import { createSelector } from '@reduxjs/toolkit';
+import { RootState } from '../../redux/store';
+import { setDataBord } from '../../redux/reducers/sliceBord';
+import { getRequest } from '../../hooks/useFetch';
 
 type PropsDataCell = {
 	dataCell: TypeCell,
@@ -33,7 +39,11 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 	const dispatch = useDispatch();
 	const cellRef = useRef<HTMLElement>(null!);
 	const titleCellRef = useRef<HTMLHeadingElement>(null!);
-	const { prevCell, updateCell } = useSelector((r: R) => r.reducerCell);
+	const sliceState = createSelector(
+		(state: RootState) => state.reducerCell,
+		(sliceStateCell) => sliceStateCell,
+	);
+	const { prevCell, updateCell } = useSelector(sliceState);
 	const [openModalMini, setOpenModalMini] = useState<boolean>(false);
 	const [positionDrop, setPositionDrop] = useState<PositionDrop>("noDrag");
 	const [lastClick, setLastClick] = useState<HTMLElement | null>(null);
@@ -41,13 +51,23 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 
 	const [{ isDragging, typeDragEll }, drag] = useDrag(() => ({
 		type: "cell",
-		end: (_, monitor) => {
+		end: async (_, monitor) => {
 			if (!monitor.getDropResult()) return;
-			dispatch(updateCellF(prevCell!.id));
+			dispatch(updateCellFunc(prevCell!.id));
 			const { numberCellDrop, positionDrop } = prevCell!;
-			const data = changeDataCell(dataCell.id, numberCellDrop, positionDrop);
+			// const data = changeDataCell(dataCell.id, numberCellDrop, positionDrop);
+			const { request } = getRequest();
+			const { items } = await request(
+				"/setCellsAfterDND",
+				"POST",
+				JSON.stringify({
+					srcCellId: dataCell.id,
+					numberCellDrop,
+					positionDrop,
+				}),
+			);
 			setPositionDrop("noDrag");
-			dispatch(setDataBord(data));
+			dispatch(setDataBord(items));
 			setLastClick(null)
 		},
 		item: {
@@ -77,7 +97,7 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 		const el = e.target as HTMLElement;
 		const parent = searchParent(el, cellRef.current) as HTMLElement;
 		if (prevCell && parent !== prevCell.el)
-			dispatch(updateCellF(prevCell.id));
+			dispatch(updateCellFunc(prevCell.id));
 		const coordEll = parent.getBoundingClientRect();
 		if (x < Math.ceil(coordEll.left + (coordEll.width / 2))) {
 			if (positionDrop === 'before' && prevCell && parent === prevCell.el) return;
@@ -129,7 +149,7 @@ export const CellMemo: FC<PropsDataCell> = ({ dataCell, numberCell }) => {
 
 	useEffect(() => {
 		if (updateCell === dataCell.id && positionDrop !== 'noDrag') {
-			dispatch(updateCellF(null));
+			dispatch(updateCellFunc(null));
 			setPositionDrop('noDrag');
 		}
 		setHoverTitle(false);

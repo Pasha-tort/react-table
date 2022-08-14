@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Bord } from './components/bord';
 import { Modal } from './components/modal/modal';
-import { R } from './redux/reducers';
 
 //styles
 import './scss/index.scss';

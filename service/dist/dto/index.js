@@ -86,8 +86,8 @@ var TypeBord;
         ], Request.prototype, "numberCardDrop", void 0);
         __decorate([
             (0, class_transformer_1.Expose)(),
-            __metadata("design:type", Object)
-        ], Request.prototype, "postionDrop", void 0);
+            __metadata("design:type", String)
+        ], Request.prototype, "positionDrop", void 0);
         Request = __decorate([
             (0, class_transformer_1.Exclude)()
         ], Request);
@@ -162,10 +162,6 @@ var TypeBord;
             (0, class_transformer_1.Expose)(),
             __metadata("design:type", Card)
         ], Request.prototype, "dataCard", void 0);
-        __decorate([
-            (0, class_transformer_1.Expose)(),
-            __metadata("design:type", String)
-        ], Request.prototype, "id", void 0);
         Request = __decorate([
             (0, class_transformer_1.Exclude)()
         ], Request);

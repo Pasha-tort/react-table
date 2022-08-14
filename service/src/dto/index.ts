@@ -48,7 +48,7 @@ export namespace TypeBord {
 			@Expose()
 			numberCardDrop: number;
 			@Expose()
-			postionDrop: Omit<PositionDrop, "onDrag">
+			positionDrop: "after" | "before";
 		}
 		
 		export class Response extends Bord {}
@@ -91,8 +91,6 @@ export namespace TypeBord {
 		export class Request {
 			@Expose()
 			dataCard: Card;
-			@Expose()
-			id: string;
 		} 
 		export class Response extends Bord {};
 	}

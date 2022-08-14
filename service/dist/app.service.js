@@ -14,8 +14,8 @@ const common_1 = require("@nestjs/common");
 const data_1 = require("./data");
 let AppService = class AppService {
     constructor() { }
-    setCardsAfterDND({ srcCellId, srcElId, finalCellId, numberCardDrop, postionDrop, }) {
-        const items = (0, data_1.changeDataCard)(srcCellId, srcElId, finalCellId, numberCardDrop, postionDrop);
+    setCardsAfterDND({ srcCellId, srcElId, finalCellId, numberCardDrop, positionDrop, }) {
+        const items = (0, data_1.changeDataCard)(srcCellId, srcElId, finalCellId, numberCardDrop, positionDrop);
         return { items };
     }
     setCellsAfterDND({ srcCellId, numberCellDrop, positionDrop, }) {
@@ -30,8 +30,8 @@ let AppService = class AppService {
         const items = (0, data_1.addCell)(dataCell);
         return { items };
     }
-    setOneCard({ dataCard, id, }) {
-        const items = (0, data_1.setOneCard)(dataCard, id);
+    setOneCard({ dataCard, }) {
+        const items = (0, data_1.setOneCard)(dataCard);
         return { items };
     }
     setOneCell({ dataCell, id, }) {

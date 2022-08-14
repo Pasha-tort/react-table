@@ -20,7 +20,7 @@ export class AppService {
 			srcElId,
 			finalCellId,
 			numberCardDrop,
-			postionDrop,
+			positionDrop,
 		}: TypeBord.setCardsAfterDND.Request
 	): TypeBord.setCardsAfterDND.Response {
 		const items = changeDataCard(
@@ -28,8 +28,8 @@ export class AppService {
 			srcElId,
 			finalCellId,
 			numberCardDrop,
-			postionDrop
-		)
+			positionDrop
+		);
 		return {items};
 	}
 
@@ -70,10 +70,9 @@ export class AppService {
 	setOneCard(
 		{
 			dataCard,
-			id,
 		}: TypeBord.setOneCard.Request
 	): TypeBord.setOneCard.Response {
-		const items = setOneCard(dataCard, id);
+		const items = setOneCard(dataCard);
 		return {items};
 	}
 

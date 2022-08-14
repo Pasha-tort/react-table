@@ -75,11 +75,11 @@ function changeDataCard(srcCellId, srcElId, finalCellId, numberCardDrop, positio
     exports.data[indexSrcCell] = Object.assign(Object.assign({}, exports.data[indexSrcCell]), { list: exports.data[indexSrcCell].list.filter(item => {
             return item.id !== srcEl.id;
         }) });
-    exports.data[indexFinallCell] = Object.assign(Object.assign({}, exports.data[indexFinallCell]), { list: positionDrop === 'before' ?
+    exports.data[indexFinallCell] = Object.assign(Object.assign({}, exports.data[indexFinallCell]), { list: indexFinallCell === indexSrcCell ?
             [
-                ...exports.data[indexFinallCell].list.slice(0, numberCardDrop),
+                ...exports.data[indexFinallCell].list.slice(0, numberCardDrop - 1),
                 srcEl,
-                ...exports.data[indexFinallCell].list.slice(numberCardDrop),
+                ...exports.data[indexFinallCell].list.slice(numberCardDrop - 1),
             ] :
             [
                 ...exports.data[indexFinallCell].list.slice(0, numberCardDrop),
@@ -96,9 +96,9 @@ function changeDataCell(srcCellId, numberCellDrop, positionDrop) {
     exports.data = exports.data.filter(cell => cell.id !== srcEll.id);
     exports.data = positionDrop === "before" ?
         [
-            ...exports.data.slice(0, numberCellDrop),
+            ...exports.data.slice(0, numberCellDrop - 1),
             srcEll,
-            ...exports.data.slice(numberCellDrop),
+            ...exports.data.slice(numberCellDrop - 1),
         ] :
         [
             ...exports.data.slice(0, numberCellDrop),
@@ -118,11 +118,11 @@ function addCell(dataCell) {
     return exports.data;
 }
 exports.addCell = addCell;
-function setOneCard(dataCard, id) {
+function setOneCard(dataCard) {
     for (const cell of exports.data) {
         let result = false;
         for (const card of cell.list) {
-            if (card.id === id) {
+            if (card.id === dataCard.id) {
                 card.title = dataCard.title;
                 card.desc = dataCard.desc;
                 result = true;

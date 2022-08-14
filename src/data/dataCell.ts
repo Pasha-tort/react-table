@@ -1,4 +1,5 @@
-import { PositionDrop } from '../redux/types/typeCard';
+// import { PositionDrop } from '../redux/types/typeCard';
+import { PositionDrop } from '../redux/reducers/sliceCard';
 
 export let data = [
 	{

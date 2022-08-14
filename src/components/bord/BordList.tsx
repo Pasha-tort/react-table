@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { createSelector } from '@reduxjs/toolkit';
 
 //libs
 import { useDrop } from 'react-dnd';
@@ -16,22 +16,26 @@ import { Cell } from '../cell';
 import style from './bord.module.scss';
 
 //actions
-import { fetchData } from '../../redux/actions/actionsBord';
+import { getDataBord } from '../../redux/reducers/sliceBord';
+import { setDataBord } from '../../redux/reducers/sliceBord';
 
 //types
-import { R } from '../../redux/reducers';
-import { useHttp } from '../../hooks/useFetch';
 import { useAppDispatch } from '../../redux/hooks';
+import { RootState } from '../../redux/store';
+import { getRequest } from '../../hooks/useFetch';
 
 export const BordList: FC = () => {
 
-	const { data } = useSelector((state: R) => state.reducerBord);
+	const sliceState = createSelector(
+		(state: RootState) => state.reducerBord.data,
+		(dataBord) => dataBord
+	);
+	const data = useSelector(sliceState);
 	const bordListRef = useRef<HTMLUListElement>(null!);
 	const dispatch = useAppDispatch();
-	const { request } = useHttp();
 
 	useEffect(() => {
-		dispatch(fetchData(request))
+		dispatch(getDataBord())
 	}, []);
 
 	const [, drop] = useDrop(() => ({
@@ -41,13 +45,20 @@ export const BordList: FC = () => {
 		}),
 	}), [data.length]);
 
-	const handlerAddCell = () => {
-		// const data = addCell({
-		// 	id: uuid(),
-		// 	title: "",
-		// 	list: [],
-		// });
-		// dispatch(setDataBord(data));
+	const handlerAddCell = async () => {
+		const { request } = getRequest();
+		const { items } = await request(
+			"/addCell",
+			"POST",
+			JSON.stringify({
+				dataCell: {
+					id: uuid(),
+					title: "",
+					list: [],
+				}
+			}),
+		);
+		dispatch(setDataBord(items));
 	}
 
 	return (

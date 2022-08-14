@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
@@ -41,36 +44,42 @@ let AppController = class AppController {
 };
 __decorate([
     (0, common_1.Post)("setCardsAfterDND"),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [dto_1.TypeBord.setCardsAfterDND.Request]),
     __metadata("design:returntype", dto_1.TypeBord.setCardsAfterDND.Response)
 ], AppController.prototype, "setCardsAfterDND", null);
 __decorate([
     (0, common_1.Post)("setCellsAfterDND"),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [dto_1.TypeBord.setCellsAfterDND.Request]),
     __metadata("design:returntype", dto_1.TypeBord.setCellsAfterDND.Response)
 ], AppController.prototype, "setCellsAfterDND", null);
 __decorate([
     (0, common_1.Post)("addCard"),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [dto_1.TypeBord.addCard.Request]),
     __metadata("design:returntype", dto_1.TypeBord.addCard.Response)
 ], AppController.prototype, "addCard", null);
 __decorate([
     (0, common_1.Post)("addCell"),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [dto_1.TypeBord.addCell.Request]),
     __metadata("design:returntype", dto_1.TypeBord.addCell.Response)
 ], AppController.prototype, "addCell", null);
 __decorate([
     (0, common_1.Post)("setOneCell"),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [dto_1.TypeBord.setOneCell.Request]),
     __metadata("design:returntype", dto_1.TypeBord.setOneCell.Response)
 ], AppController.prototype, "setOneCell", null);
 __decorate([
     (0, common_1.Post)("setOneCard"),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [dto_1.TypeBord.setOneCard.Request]),
     __metadata("design:returntype", dto_1.TypeBord.setOneCard.Response)

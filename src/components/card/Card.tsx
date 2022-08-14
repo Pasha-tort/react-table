@@ -12,17 +12,23 @@ import { EditModal } from './EditModal';
 import style from './card.module.scss';
 
 //actions
-import { setDataBord } from '../../redux/actions/actionsBord';
-import { setPrevCard, updateCardF } from '../../redux/actions/actionsCard';
-import { setOpenModal } from '../../redux/actions/actionsModal';
+// import { setDataBord } from '../../redux/actions/actionsBord';
+// import { setPrevCard, updateCardF } from '../../redux/actions/actionsCard';
+// import { setOpenModal } from '../../redux/actions/actionsModal';
+import { setDataBord } from '../../redux/reducers/sliceBord';
+import { setPrevCard, updateCardFunc } from '../../redux/reducers/sliceCard';
 
 //lib
 import { searchParent } from '../../lib/type';
 
 //types
-import { R } from '../../redux/reducers';
-import { PositionDrop } from '../../redux/types/typeCard';
+// import { R } from '../../redux/reducers';
+// import { PositionDrop } from '../../redux/types/typeCard';
+import { PositionDrop } from '../../redux/reducers/sliceCard';
 import { Modal } from '../modal/modal';
+import { getRequest } from '../../hooks/useFetch';
+import { createSelector } from '@reduxjs/toolkit';
+import { RootState } from '../../redux/store';
 type PropsCard = {
 	dataCard: TypeCard,
 	idCell: string,
@@ -41,18 +47,32 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 	const [hoverCard, setHoverCard] = useState<boolean>(false);
 	const [openModal, setOpenModal] = useState<boolean>(false);
 
-	const { prevCard, updateCard } = useSelector((r: R) => r.reducerCard);
-
+	const sliceState = createSelector(
+		(state: RootState) => state.reducerCard,
+		(dataCard) => dataCard,
+	);
+	const { prevCard, updateCard } = useSelector(sliceState);
 	const [{ isDragging, typeDragEll }, drag] = useDrag(() => ({
 		type: 'card',
-		end: (_, monitor) => {
+		end: async (_, monitor) => {
 			if (!monitor.getDropResult()) return;
-			dispatch(updateCardF(prevCard!.id));
+			dispatch(updateCardFunc(prevCard!.id));
 			const { numberCardDrop, positionDrop } = prevCard!;
 			const { idSrcCell, idSrcCard, idFinalCell } = monitor.getDropResult() as TypeDataEndDragging;
-			const data = changeDataCard(idSrcCell, idSrcCard, idFinalCell, numberCardDrop!, positionDrop);
+			const { request } = getRequest();
+			const { items } = await request(
+				"/setCardsAfterDND",
+				"POST",
+				JSON.stringify({
+					srcCellId: idSrcCell,
+					srcElId: idSrcCard,
+					finalCellId: idFinalCell,
+					numberCardDrop,
+					positionDrop,
+				}),
+			);
 			setPositionDrop('noDrag');
-			dispatch(setDataBord(data));
+			dispatch(setDataBord(items));
 		},
 		item: {
 			idSrcCard: dataCard.id,
@@ -77,7 +97,7 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 		const el = e.target as HTMLElement;
 		const parent = searchParent(el, cardRef.current) as HTMLElement;
 		if (prevCard && parent !== prevCard.el)
-			dispatch(updateCardF(prevCard.id));
+			dispatch(updateCardFunc(prevCard.id));
 
 		const coordEl = parent.getBoundingClientRect();
 		if (y < Math.ceil(coordEl.top + (coordEl.height / 2))) {
@@ -122,13 +142,15 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 
 	useEffect(() => {
 		if (updateCard === dataCard.id && positionDrop !== 'noDrag') {
-			dispatch(updateCardF(null))
+			dispatch(updateCardFunc(null))
 			setPositionDrop('noDrag');
 		}
 		setHoverCard(false);
 	}, [
 		updateCard,
 		dataCard.id,
+		dataCard.desc,
+		dataCard.title,
 		positionDrop,
 		numberList,
 		dispatch,
@@ -138,7 +160,7 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 		<>
 			{openModal ?
 				<Modal close={() => setOpenModal(false)}>
-					<EditModal close={() => setOpenModal(false)} title={dataCard.title} desc={dataCard.desc} />
+					<EditModal close={() => setOpenModal(false)} id={dataCard.id} title={dataCard.title} desc={dataCard.desc} />
 				</Modal>
 				: null
 			}
@@ -176,7 +198,12 @@ export const CardMemo: FC<PropsCard> = ({ dataCard, idCell, numberList }) => {
 
 export const Card = React.memo(CardMemo, (prev, next) => {
 	// false - обновляем (нюанс react.memo)
-	if (prev.numberList === next.numberList && prev.idCell === next.idCell)
+	if (
+		prev.numberList === next.numberList &&
+		prev.idCell === next.idCell &&
+		prev.dataCard.desc === next.dataCard.desc &&
+		prev.dataCard.title === next.dataCard.title
+	)
 		return true
 	return false
 })

@@ -9,7 +9,8 @@ import { v4 as uuid } from 'uuid';
 import { Card } from '../card';
 
 //actions
-import { setDataBord } from '../../redux/actions/actionsBord';
+// import { setDataBord } from '../../redux/actions/actionsBord';
+import { setDataBord } from '../../redux/reducers/sliceBord';
 
 //data
 import { addCard } from "../../data/dataCell";
@@ -20,6 +21,7 @@ import style from './cell.module.scss';
 //types
 import { TypeCard } from '../../data/dataCell';
 import { useState } from 'react';
+import { getRequest } from '../../hooks/useFetch';
 type PropsCellList = {
 	cards: TypeCard[],
 	id: string,
@@ -64,13 +66,26 @@ export const CellList: FC<PropsCellList> = ({ cards, id, numberCell }) => {
 		if (!cards.length) setBackground('');
 	}
 
-	const handlerAddCard = () => {
-		const data = addCard({
-			id: uuid(),
-			title: "",
-			desc: "",
-		}, numberCell);
-		dispatch(setDataBord(data));
+	const handlerAddCard = async () => {
+		// const data = addCard({
+		// 	id: uuid(),
+		// 	title: "",
+		// 	desc: "",
+		// }, numberCell);
+		const { request } = getRequest();
+		const { items } = await request(
+			"/addCard",
+			"POST",
+			JSON.stringify({
+				dataCard: {
+					id: uuid(),
+					title: "",
+					desc: "",
+				},
+				numberCell,
+			})
+		)
+		dispatch(setDataBord(items));
 	}
 
 	return (

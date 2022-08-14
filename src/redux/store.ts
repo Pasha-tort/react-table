@@ -4,8 +4,11 @@ import { rootReducer } from './reducers';
 export const store = configureStore({
 	reducer: rootReducer,
 	devTools: process.env.NODE_ENV !== 'production',
-	middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+		serializableCheck: false,
+	}),
 });
 
 export type AppDispatch = typeof store.dispatch;
-export type RootReducer = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>
+export type Selector<S> = (state: RootState) => S;
